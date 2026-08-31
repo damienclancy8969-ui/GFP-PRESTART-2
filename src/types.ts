@@ -43,6 +43,7 @@ export interface SwatchOption {
   description?: string;
   priceNote?: string;
   icon?: IconKey;
+  image?: string;
 }
 
 export interface LineItem {

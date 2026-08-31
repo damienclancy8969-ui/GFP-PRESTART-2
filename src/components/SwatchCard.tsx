@@ -29,13 +29,19 @@ export function SwatchCard({ option, selected, onClick }: Props) {
         )}
       </span>
 
-      {option.hex && (
-        <div
-          className="flex h-16 w-full items-center justify-center"
-          style={{ backgroundColor: option.hex, color: fg }}
-        >
-          {option.icon && <ProductIcon icon={option.icon} className="h-7 w-7 opacity-80" />}
+      {option.image ? (
+        <div className="h-16 w-full overflow-hidden" style={{ backgroundColor: option.hex ?? "#eeece5" }}>
+          <img src={option.image} alt={option.name} className="h-full w-full object-cover" loading="lazy" />
         </div>
+      ) : (
+        option.hex && (
+          <div
+            className="flex h-16 w-full items-center justify-center"
+            style={{ backgroundColor: option.hex, color: fg }}
+          >
+            {option.icon && <ProductIcon icon={option.icon} className="h-7 w-7 opacity-80" />}
+          </div>
+        )
       )}
 
       <div className="flex flex-1 flex-col gap-0.5 px-2.5 py-2">

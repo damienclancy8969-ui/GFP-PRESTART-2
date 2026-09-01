@@ -25,8 +25,13 @@ export function PlanUpload() {
       try {
         const kind = kindFor(file.name);
         if (kind === "pdf") {
-          const dataUrl = await renderFirstPageToDataUrl(file);
-          setPlanFile({ name: file.name, dataUrl, kind });
+          try {
+            const dataUrl = await renderFirstPageToDataUrl(file);
+            setPlanFile({ name: file.name, dataUrl, kind });
+          } catch {
+            // PDF page preview unavailable (e.g. no worker in this environment) — still attach the file.
+            setPlanFile({ name: file.name, dataUrl: "", kind: "other" });
+          }
         } else if (kind === "image") {
           const dataUrl = await new Promise<string>((resolve, reject) => {
             const reader = new FileReader();

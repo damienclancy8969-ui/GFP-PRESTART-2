@@ -47,8 +47,11 @@ export function CategoryPage({ section }: { section: CategorySection }) {
         )}
 
         {section.brand && (
-          <div className="mt-8 border-t border-brand-200/60 pt-4">
-            <span className="text-[11px] font-semibold tracking-wide text-stone-400">{section.brand}</span>
+          <div className="mt-8 flex items-center gap-2 border-t border-brand-200/60 pt-4">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-stone-400">Brand</span>
+            <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[12px] font-semibold text-brand-700">
+              {section.brand}
+            </span>
           </div>
         )}
       </div>

@@ -23,6 +23,7 @@ interface SelectionStore {
   setNote: (subsectionId: string, note: string) => void;
   setQty: (subsectionId: string, lineItemId: string, qty: number) => void;
   toggleLineItem: (subsectionId: string, lineItemId: string) => void;
+  setItemNote: (subsectionId: string, lineItemId: string, note: string) => void;
   reset: () => void;
 }
 
@@ -84,6 +85,12 @@ export const useSelectionStore = create<SelectionStore>()(
           if (ids.has(lineItemId)) ids.delete(lineItemId);
           else ids.add(lineItemId);
           cur.optionIds = Array.from(ids);
+          return { selections: { ...s.selections, [subsectionId]: cur } };
+        }),
+      setItemNote: (subsectionId, lineItemId, note) =>
+        set((s) => {
+          const cur = getOrInit(s.selections, subsectionId);
+          cur.itemNotes = { ...(cur.itemNotes ?? {}), [lineItemId]: note };
           return { selections: { ...s.selections, [subsectionId]: cur } };
         }),
       reset: () => set({ selections: {}, planFile: null, clientName: "", jobNumber: "" }),

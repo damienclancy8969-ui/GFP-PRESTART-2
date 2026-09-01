@@ -50,9 +50,12 @@ export function buildAddendum(selections: SelectionState): AddendumCategory[] {
           const included = value.optionIds?.includes(li.id);
           if (!included) continue;
           const qty = value.qty?.[li.id];
+          const note = value.itemNotes?.[li.id]?.trim();
+          let text = qty ? `${li.label} × ${qty}` : li.label;
+          if (note) text += ` — ${note}`;
           lines.push({
             label: sub.heading ?? section.title,
-            value: qty ? `${li.label} × ${qty}` : li.label,
+            value: text,
             priceNote: li.priceNote,
             tier: sub.tier,
           });

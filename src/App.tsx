@@ -6,6 +6,7 @@ import { WelcomePage } from "./components/WelcomePage";
 import { CategoryPage } from "./components/CategoryPage";
 import { Visualiser } from "./components/visualiser/Visualiser";
 import { Addendum } from "./components/Addendum";
+import { ImageLightbox } from "./components/ImageLightbox";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
           </footer>
         </main>
       </div>
+      <ImageLightbox />
     </div>
   );
 }

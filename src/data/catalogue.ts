@@ -71,6 +71,7 @@ export const catalogue: CategorySection[] = [
             hex: "#3A3A3C",
             description:
               "The original corrugated steel profile trusted by Australians for generations — lightweight, durable and versatile.",
+            inspoQuery: "Colorbond Custom Orb cladding house",
           },
           {
             id: "trimdek",
@@ -79,6 +80,7 @@ export const catalogue: CategorySection[] = [
             hex: "#4B4D4E",
             description:
               "A modern ribbed profile with clean, defined lines for a sleek, low-maintenance exterior.",
+            inspoQuery: "Colorbond Trimdek cladding house",
           },
         ],
       },
@@ -96,6 +98,9 @@ export const catalogue: CategorySection[] = [
             priceNote: "POA",
             description:
               "Vertically grooved panels with the beauty of painted vertical-joint timber and the benefits of fibre cement.",
+            inspoQuery: "James Hardie Axon cladding vertical groove",
+            inspoNote:
+              "Innova® panels are visually very similar to James Hardie Axon® cladding — a search for Axon often turns up more real-world installation photos of this style.",
           },
           {
             id: "durascape",
@@ -103,6 +108,9 @@ export const catalogue: CategorySection[] = [
             image: P + "cladding-durascape.jpg",
             priceNote: "POA",
             description: "The contemporary style of a rendered finish with a clean, modern edge.",
+            inspoQuery: "James Hardie Axon cladding rendered look",
+            inspoNote:
+              "Innova® panels are visually very similar to James Hardie Axon® cladding — a search for Axon often turns up more real-world installation photos of this style.",
           },
           {
             id: "stratum",
@@ -110,6 +118,9 @@ export const catalogue: CategorySection[] = [
             image: P + "cladding-stratum.jpg",
             priceNote: "POA",
             description: "Strong horizontal or vertical line details for modern home designs.",
+            inspoQuery: "James Hardie Axon cladding horizontal lines",
+            inspoNote:
+              "Innova® panels are visually very similar to James Hardie Axon® cladding — a search for Axon often turns up more real-world installation photos of this style.",
           },
         ],
       },
@@ -252,7 +263,7 @@ export const catalogue: CategorySection[] = [
         lineItems: [{ id: "cavity-slider-qty", label: "Cavity slider", priceNote: "+$980", hasQty: true }],
       },
       {
-        id: "front-door",
+        id: "front-door-style",
         heading: "Optional front door — Benchmark Frames by Jason Windows",
         tier: "upgrade",
         mode: "single",
@@ -260,7 +271,48 @@ export const catalogue: CategorySection[] = [
           { id: "benchmark-frame", name: "Benchmark Frame Front Door", image: P + "door-front-glass.jpg", priceNote: "POA" },
         ],
       },
+      {
+        id: "front-door-colour",
+        heading: "Benchmark door colour",
+        tier: "upgrade",
+        mode: "single",
+        options: [
+          { id: "white-lustre", name: "White Lustre", hex: "#EFEBE2" },
+          { id: "pearl-white", name: "Pearl White", hex: "#EDE8DD" },
+          { id: "night-sky", name: "Night Sky", hex: "#24211F" },
+          { id: "storm-front", name: "Storm Front", hex: "#6E6E6E" },
+          { id: "silver-lustre", name: "Silver Lustre", hex: "#A8A9AA" },
+          { id: "charcoal-lustre", name: "Charcoal Lustre", hex: "#43413F" },
+          { id: "charcoal-ebony", name: "Charcoal Ebony", hex: "#2E2A26" },
+        ],
+      },
+      {
+        id: "front-door-sentry",
+        heading: "Upgrade to Sentry Door — 5 Lite EHS (+$800 on top of Benchmark)",
+        tier: "upgrade",
+        mode: "single",
+        body: "Double-upgrade from the standard Benchmark hinged door to a Jason Windows Sentry door — shown here in the 5 Lite EHS glazed panel style — for an extra $800.",
+        options: [
+          {
+            id: "sentry-5lite",
+            name: "Jason Windows Sentry Door — 5 Lite EHS",
+            image: P + "door-sentry-5lite.svg",
+            priceNote: "+$800",
+          },
+        ],
+      },
+      {
+        id: "front-door-sentry-colour",
+        heading: "Sentry timber-look colours (in addition to all Benchmark colours)",
+        tier: "upgrade",
+        mode: "single",
+        options: [
+          { id: "jarrah-rose-mahogany", name: "Jarrah Rose Mahogany", hex: "#5B3A2E" },
+          { id: "western-red-cedar", name: "Western Red Cedar", hex: "#8C5A3C" },
+        ],
+      },
     ],
+    visualiserTarget: { frontDoor: "front-door-colour" },
   },
   {
     id: "fixtures-handles",
@@ -381,28 +433,6 @@ export const catalogue: CategorySection[] = [
     ],
   },
   {
-    id: "wall-niche",
-    group: "Internal Finishes",
-    title: "Wall Recess Niche",
-    intro:
-      "Set your home apart with a wall recess niche — subtle depth in living areas, or a display shelf in bathrooms. Consult your Sales Rep.",
-    heroImage: P + "niche-hero.jpg",
-    subsections: [
-      {
-        id: "niche-dimension",
-        tier: "upgrade",
-        mode: "single",
-        allowOther: true,
-        otherLabel: "Other dimension",
-        options: [
-          { id: "niche-30x30", name: "30cm × 30cm", icon: "niche", hex: "#E9E6DE", priceNote: "+$500" },
-          { id: "niche-60x30", name: "60cm × 30cm", icon: "niche", hex: "#E4E1D8", priceNote: "+$500" },
-          { id: "niche-140x30", name: "140cm × 30cm", icon: "niche", hex: "#DFDCD2", priceNote: "+$500" },
-        ],
-      },
-    ],
-  },
-  {
     id: "skylights",
     group: "Internal Finishes",
     title: "Skylights",
@@ -413,8 +443,17 @@ export const catalogue: CategorySection[] = [
       {
         id: "skylight-add",
         tier: "upgrade",
-        mode: "lineItems",
-        lineItems: [{ id: "skylight-qty", label: "Add skylight", priceNote: "POA", hasQty: true }],
+        mode: "single",
+        options: [
+          { id: "velux", name: "Velux Skylight", icon: "skylight", hex: "#DCE6EC", priceNote: "+$4,000 each" },
+          {
+            id: "flush-mount-electric",
+            name: "Square Flush Mount Electric Skylight (Alternative)",
+            icon: "skylight",
+            hex: "#E3E0D6",
+            priceNote: "+$850 each",
+          },
+        ],
       },
     ],
   },
@@ -432,14 +471,17 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "white", name: "White", image: P + "downlight-white.jpg" },
-          { id: "black", name: "Black", image: P + "downlight-black.jpg" },
+          { id: "white", name: "White", image: P + "electrical-white.jpg" },
+          { id: "black", name: "Black", image: P + "electrical-black.jpg" },
         ],
       },
       {
         id: "electrical-upgrades",
         tier: "upgrade",
         mode: "lineItems",
+        allowNotes: true,
+        warning:
+          "These upgrades are for anything additional to your current drawings — please check your drawings before deciding what to add below.",
         lineItems: [
           { id: "led-10pack", label: "10-pack LED downlight", priceNote: "+$900", hasQty: true },
           { id: "tv-point", label: "TV point", priceNote: "+$135/each", hasQty: true },
@@ -460,7 +502,8 @@ export const catalogue: CategorySection[] = [
     group: "Kitchen",
     title: "Kitchen Appliances",
     brand: "Haier",
-    intro: "All kitchen appliances include a 600mm induction cooktop, 600mm range hood and 600mm oven.",
+    intro:
+      "All kitchen appliances are supplied by Haier, a leading Australian appliance brand — including a 600mm induction cooktop, 600mm range hood and 600mm oven.",
     subsections: [
       {
         id: "appliance-cooktop",
@@ -481,7 +524,7 @@ export const catalogue: CategorySection[] = [
         heading: "Rangehood",
         tier: "standard",
         mode: "single",
-        options: [{ id: "haier-rangehood", name: "60cm 500 Series Box Chimney Wall Rangehood", code: "HC60BLX1", image: P + "appliance-rangehood.jpg" }],
+        options: [{ id: "haier-rangehood", name: "60cm 500 Series Box Chimney Wall Rangehood", code: "HC60BLX1", image: P + "appliance-rangehood-integrated.jpg" }],
       },
       {
         id: "rangehood-upgrade",
@@ -491,7 +534,7 @@ export const catalogue: CategorySection[] = [
           {
             id: "integrated-rangehood",
             name: "500 Series Integrated Insert Rangehood",
-            image: P + "appliance-rangehood-integrated.jpg",
+            image: P + "appliance-rangehood.jpg",
             code: "HPH60ILX2",
             priceNote: "POA",
           },
@@ -547,7 +590,8 @@ export const catalogue: CategorySection[] = [
     group: "Kitchen",
     title: "Engineered Stone Top",
     brand: "Vitrum Surfaces by Qstone",
-    intro: "Included in your build is a 20mm crystalline-silica-free engineered stone benchtop.",
+    intro:
+      "Included in your build is a 20mm crystalline-silica-free engineered stone benchtop for the kitchen — and for the laundry too, if it has a proper cabinet and benchtop rather than the standard pedestal unit. Bathroom vanities are not included here: they come with a standard White Pearl stone top (see Bathroom Vanities).",
     subsections: [
       {
         id: "stone-colour",
@@ -594,6 +638,16 @@ export const catalogue: CategorySection[] = [
           { id: "undermount", name: "Convert any top-mount sink to under-mount", icon: "sink", hex: "#C9CBCB", priceNote: "+$380" },
         ],
       },
+      {
+        id: "laundry-sink-upgrade",
+        heading: "Laundry sink upgrade (if benchtop applicable)",
+        tier: "upgrade",
+        mode: "single",
+        body: "If your laundry has a proper cabinet and benchtop rather than the standard Tilos pedestal unit, this is the matching upgrade sink.",
+        options: [
+          { id: "mela-triton-45l", name: "MELA Triton 45L Polished Stainless Steel Sink", icon: "sink", hex: "#C9CBCB", priceNote: "POA" },
+        ],
+      },
     ],
   },
   {
@@ -604,6 +658,23 @@ export const catalogue: CategorySection[] = [
     intro:
       "Kitchen, bathroom and laundry cabinets consist of flush cupboard doors and drawers, all fitted with soft-close hinges as standard.",
     subsections: [
+      {
+        id: "cabinetry-shaker",
+        heading: "Door profile",
+        tier: "standard",
+        mode: "single",
+        options: [
+          { id: "flush-white", name: "Flush, White (standard)", icon: "cabinet", hex: "#F1EFE8" },
+          {
+            id: "shaker-white",
+            name: "Shaker Profile, White",
+            icon: "cabinet",
+            hex: "#F1EFE8",
+            priceNote: "Included",
+            description: "Free upgrade — same white finish, shaker-style panelled doors and drawers.",
+          },
+        ],
+      },
       {
         id: "cabinetry-notes",
         tier: "standard",
@@ -701,6 +772,28 @@ export const catalogue: CategorySection[] = [
     ],
   },
   {
+    id: "wall-niche",
+    group: "Bathroom & Laundry",
+    title: "Wall Recess Niche",
+    intro:
+      "Set your home apart with a wall recess niche — subtle depth in living areas, or a display shelf in bathrooms. Consult your Sales Rep.",
+    heroImage: P + "niche-hero.jpg",
+    subsections: [
+      {
+        id: "niche-dimension",
+        tier: "upgrade",
+        mode: "single",
+        allowOther: true,
+        otherLabel: "Other dimension",
+        options: [
+          { id: "niche-365x600", name: "365mm × 600mm", icon: "niche", hex: "#E9E6DE", priceNote: "+$500" },
+          { id: "niche-365x320", name: "365mm × 320mm", icon: "niche", hex: "#E4E1D8", priceNote: "+$500" },
+          { id: "niche-365x900", name: "365mm × 900mm", icon: "niche", hex: "#DFDCD2", priceNote: "+$500" },
+        ],
+      },
+    ],
+  },
+  {
     id: "wet-area-tiles",
     group: "Bathroom & Laundry",
     title: "Wet Area Tiles",
@@ -753,7 +846,7 @@ export const catalogue: CategorySection[] = [
     group: "Bathroom & Laundry",
     title: "Bathroom Vanities",
     intro:
-      "Our wall-mounted vanity cupboards provide your bathroom with the wow factor. 900mm is standard; upgrades come in 1200mm, 1500mm and 1800mm.",
+      "Our wall-mounted vanity cupboards provide your bathroom with the wow factor. 900mm is standard; upgrades come in 1200mm, 1500mm and 1800mm. All vanities include a standard White Pearl stone top (not the Engineered Stone Top colour range).",
     subsections: [
       {
         id: "vanity-colour",

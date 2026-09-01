@@ -44,6 +44,8 @@ export interface SwatchOption {
   priceNote?: string;
   icon?: IconKey;
   image?: string;
+  inspoQuery?: string;
+  inspoNote?: string;
 }
 
 export interface LineItem {
@@ -64,6 +66,8 @@ export interface SubSection {
   allowOther?: boolean;
   otherLabel?: string;
   allowNote?: boolean;
+  allowNotes?: boolean;
+  warning?: string;
 }
 
 export type VisualiserTarget =
@@ -92,6 +96,7 @@ export interface SelectionValue {
   otherText?: string;
   qty?: Record<string, number>;
   note?: string;
+  itemNotes?: Record<string, string>;
 }
 
 export type SelectionState = Record<string, SelectionValue>;

@@ -41,9 +41,9 @@ const taubmanWhites: SwatchOption[] = [
 ];
 
 const frameFinishes: SwatchOption[] = [
-  { id: "black", name: "Black", hex: "#1B1B1B", icon: "robe" },
-  { id: "matt-silver", name: "Matt Silver", hex: "#AFB2B3", icon: "robe" },
-  { id: "bright-silver", name: "Bright Silver", hex: "#D9DBDC", icon: "robe" },
+  { id: "black", name: "Black", image: P + "robe-black.png" },
+  { id: "matt-silver", name: "Matt Silver", image: P + "robe-matt-silver.png" },
+  { id: "bright-silver", name: "Bright Silver", image: P + "robe-bright-silver.png" },
 ];
 
 export const catalogue: CategorySection[] = [
@@ -257,7 +257,7 @@ export const catalogue: CategorySection[] = [
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "benchmark-frame", name: "Benchmark Frame Front Door", icon: "door", hex: "#B98A55", priceNote: "POA" },
+          { id: "benchmark-frame", name: "Benchmark Frame Front Door", image: P + "door-front-glass.jpg", priceNote: "POA" },
         ],
       },
     ],
@@ -295,10 +295,10 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "black", name: "Black", hex: "#1B1B1B", icon: "robe" },
-          { id: "white", name: "White", hex: "#F4F2EC", icon: "robe" },
-          { id: "matt-silver", name: "Matt Silver", hex: "#AFB2B3", icon: "robe" },
-          { id: "bright-silver", name: "Bright Silver", hex: "#D9DBDC", icon: "robe" },
+          { id: "black", name: "Black", image: P + "robe-black.png" },
+          { id: "white", name: "White", image: P + "robe-white.png" },
+          { id: "matt-silver", name: "Matt Silver", image: P + "robe-matt-silver.png" },
+          { id: "bright-silver", name: "Bright Silver", image: P + "robe-bright-silver.png" },
         ],
       },
       {
@@ -513,6 +513,7 @@ export const catalogue: CategorySection[] = [
         allowOther: true,
         otherLabel: "Tile code (300×600 / 600×600)",
         options: [
+          { id: "standard-tile", name: "Tiles (300×600 / 600×600)", image: P + "splashback-tile-photo.jpg" },
           { id: "subway-white-matte", name: "Subway Tile — White, Matte", image: P + "splashback-white.jpg" },
           { id: "subway-white-gloss", name: "Subway Tile — White, Gloss", image: P + "splashback-white.jpg" },
           { id: "subway-black-matte", name: "Subway Tile — Black, Matte", image: P + "splashback-black.jpg" },
@@ -581,7 +582,7 @@ export const catalogue: CategorySection[] = [
         heading: "Laundry unit (if applicable)",
         tier: "standard",
         mode: "single",
-        options: [{ id: "tilos-45l", name: "Tilos 45L 'Skinny' Laundry Unit", icon: "laundry", hex: "#F1EFEA" }],
+        options: [{ id: "tilos-45l", name: "Tilos 45L 'Skinny' Laundry Unit", image: P + "sink-tilos-laundry.jpg" }],
       },
       {
         id: "sink-upgrades",
@@ -589,7 +590,7 @@ export const catalogue: CategorySection[] = [
         mode: "single",
         options: [
           { id: "hana-double", name: "Hana Double Kitchen Sink, top mount", image: P + "sink-hana-double.jpg", priceNote: "+$380" },
-          { id: "tiva-175", name: "Tiva 1080 1.75 Sink with Drainer, left bowl", icon: "sink", hex: "#C9CBCB", priceNote: "+$150" },
+          { id: "tiva-175", name: "Tiva 1080 1.75 Sink with Drainer, left bowl", image: P + "sink-tiva.jpg", priceNote: "+$150" },
           { id: "undermount", name: "Convert any top-mount sink to under-mount", icon: "sink", hex: "#C9CBCB", priceNote: "+$380" },
         ],
       },
@@ -668,9 +669,9 @@ export const catalogue: CategorySection[] = [
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "flush-black", name: "Black", hex: "#232323", priceNote: "+$50" },
-          { id: "flush-white", name: "White", hex: "#F1EFE8", priceNote: "+$50" },
-          { id: "flush-brass", name: "Brushed Brass", hex: "#B8925A", priceNote: "+$70" },
+          { id: "flush-black", name: "Black", image: P + "flush-button-black.jpg", priceNote: "+$50" },
+          { id: "flush-white", name: "White", image: P + "flush-button-white.jpg", priceNote: "+$50" },
+          { id: "flush-brass", name: "Brushed Brass", image: P + "flush-button-brass.jpg", priceNote: "+$70" },
         ],
       },
     ],

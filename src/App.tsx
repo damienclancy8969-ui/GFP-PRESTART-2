@@ -29,8 +29,9 @@ export default function App() {
           ))}
           <Addendum />
           <footer className="no-print px-2 py-8 text-center text-[11px] text-stone-400">
-            Granny Flats Perth — Digital Specification Selection Book. A working prototype; a few line items
-            (vanity supplier, some electrical extras) still show placeholder iconography pending real assets.
+            Granny Flats Perth — Digital Specification Selection Book. A working prototype; a handful of line
+            items (the Sentry door photo, laundry sink, cabinetry profile) still show placeholder iconography
+            pending real supplier assets.
           </footer>
         </main>
       </div>

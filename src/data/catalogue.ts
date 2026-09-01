@@ -853,9 +853,24 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "oak", name: "Oak", image: P + "vanity-oak.jpg" },
-          { id: "matte-white", name: "Matte White", image: P + "vanity-matte-white.jpg" },
-          { id: "hamptons-white", name: "Hamptons White", image: P + "vanity-hamptons-white.jpg" },
+          {
+            id: "oak",
+            name: "MELA Brittany 900 Oak Fluted Wall Hung Vanity",
+            code: "One side curved, 2 drawers",
+            image: P + "vanity-oak.jpg",
+          },
+          {
+            id: "matte-white",
+            name: "MELA Brittany 900 Matt White Fluted Wall Hung Vanity",
+            code: "One side curved, 2 drawers",
+            image: P + "vanity-matte-white.jpg",
+          },
+          {
+            id: "hamptons-white",
+            name: "MELA Hampton 900 Matt White Wall Hung Vanity",
+            code: "Door & drawers",
+            image: P + "vanity-hamptons-white.jpg",
+          },
         ],
       },
       {

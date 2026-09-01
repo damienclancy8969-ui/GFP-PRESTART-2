@@ -28,26 +28,17 @@ export function CoverPage() {
         </label>
       </div>
 
-      <div className="relative mx-4 mb-4 aspect-[16/10] overflow-hidden rounded-xl bg-gradient-to-br from-stone-300 via-stone-200 to-amber-100 sm:mx-8 sm:mb-8">
-        <svg viewBox="0 0 400 250" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice">
-          <rect width="400" height="250" fill="#cfd6ce" />
-          <rect y="150" width="400" height="100" fill="#8a9a86" opacity="0.5" />
-          <polygon points="20,150 380,150 320,60 90,60" fill="#efe6d5" />
-          <polygon points="20,150 90,150 90,60" fill="#d8cbae" />
-          <rect x="90" y="60" width="230" height="8" fill="#2c2c2c" />
-          <rect x="150" y="95" width="120" height="55" fill="#20242a" opacity="0.85" />
-          <rect x="270" y="70" width="14" height="80" fill="#2c2c2c" />
-          <rect x="60" y="90" width="18" height="40" fill="#20242a" opacity="0.6" />
-        </svg>
+      <div className="relative mx-4 mb-4 aspect-[16/10] overflow-hidden rounded-xl sm:mx-8 sm:mb-8">
+        <img src="/products/cover-hero.jpg" alt="Granny Flats Perth concept home" className="h-full w-full object-cover" />
         <div className="absolute inset-0 flex items-end justify-center pb-6">
           <span className="rounded-full bg-black/40 px-4 py-1.5 text-[11px] font-medium tracking-wide text-white backdrop-blur-sm">
-            Concept render — your finished design will be shown here once selections are complete
+            Concept render — your 3D design will update below as you make selections
           </span>
         </div>
       </div>
 
       <div className="flex flex-col items-center gap-5 px-8 pb-14 pt-4 text-center sm:pb-20">
-        <GfpLogo className="scale-125" />
+        <GfpLogo className="h-28 w-28" />
         <div>
           <p className="font-display text-2xl font-semibold text-brand-700 sm:text-3xl">Specification Selection Book</p>
           <div className="mx-auto mt-3 h-px w-40 bg-brand-400/60" />

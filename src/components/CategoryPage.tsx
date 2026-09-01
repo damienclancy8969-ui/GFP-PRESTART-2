@@ -13,9 +13,13 @@ export function CategoryPage({ section }: { section: CategorySection }) {
           <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">{section.title}</h2>
         </div>
         <div className="flex w-40 shrink-0 items-center justify-center bg-white/95 px-3 py-3 sm:w-48">
-          <GfpLogo className="scale-90" />
+          <GfpLogo className="h-16 w-16" />
         </div>
       </header>
+
+      {section.heroImage && (
+        <img src={section.heroImage} alt="" className="h-56 w-full object-cover sm:h-72" />
+      )}
 
       <div className="px-5 py-6 sm:px-8 sm:py-8">
         {standard.length > 0 && (

@@ -1,42 +1,49 @@
 import type { CategorySection, SwatchOption } from "../types";
 
-// Shared colour palettes, approximated from the physical Granny Flats Perth
-// Pre-Start Selection Booklet. Real swatch/product photography can be dropped
-// in later via the `image` field once supplied by GFP / their suppliers.
+// Shared colour palettes. Hex values are sampled directly from the swatch
+// chips embedded in the physical Granny Flats Perth Pre-Start Selection
+// Booklet PDF, so they match the booklet exactly rather than being approximated.
+const P = "/products/";
 
 const colorbondExterior: SwatchOption[] = [
-  { id: "surfmist", name: "Surfmist®", hex: "#E6E2D3" },
-  { id: "shale-grey", name: "Shale Grey®", hex: "#9C9787" },
-  { id: "dune", name: "Dune®", hex: "#AFA692" },
-  { id: "basalt", name: "Basalt®", hex: "#4E5150" },
-  { id: "monument", name: "Monument®", hex: "#323233" },
-  { id: "woodland-grey", name: "Woodland Grey®", hex: "#4A4740" },
-  { id: "windspray", name: "Windspray®", hex: "#97999B" },
+  { id: "surfmist", name: "Surfmist®", hex: "#E2E3DE" },
+  { id: "shale-grey", name: "Shale Grey®", hex: "#C1BDBA" },
+  { id: "dune", name: "Dune®", hex: "#B6B1AD" },
+  { id: "basalt", name: "Basalt®", hex: "#6D6C71" },
+  { id: "monument", name: "Monument®", hex: "#424244" },
+  { id: "woodland-grey", name: "Woodland Grey®", hex: "#5F5C57" },
+  { id: "windspray", name: "Windspray®", hex: "#93989B" },
 ];
 
 const colorbondRoofFull: SwatchOption[] = [
-  ...colorbondExterior,
-  { id: "ironstone", name: "Ironstone®", hex: "#494F51" },
-  { id: "wallaby", name: "Wallaby®", hex: "#8A7F70" },
+  { id: "surfmist", name: "Surfmist®", hex: "#E2E3DE" },
+  { id: "shale-grey", name: "Shale Grey®", hex: "#C1BDBA" },
+  { id: "dune", name: "Dune®", hex: "#B6B1AD" },
+  { id: "monument", name: "Monument®", hex: "#424244" },
+  { id: "woodland-grey", name: "Woodland Grey®", hex: "#5F5C57" },
+  { id: "ironstone", name: "Ironstone®", hex: "#585B60" },
+  { id: "windspray", name: "Windspray®", hex: "#93989B" },
+  { id: "basalt", name: "Basalt®", hex: "#6D6C71" },
+  { id: "wallaby", name: "Wallaby®", hex: "#807D78" },
 ];
 
 const taubmanWhites: SwatchOption[] = [
-  { id: "crisp-white", name: "Crisp White", hex: "#F6F4EC" },
-  { id: "tahira-white", name: "Tahira White", hex: "#F1ECDE" },
-  { id: "cloud-burst", name: "Cloud Burst", hex: "#C7BEAF" },
-  { id: "china-doll", name: "China Doll", hex: "#F2EBDA" },
-  { id: "big-white", name: "Big White", hex: "#F8F5EC" },
-  { id: "miss-universe", name: "Miss Universe", hex: "#F2E9D2" },
-  { id: "cradle-white", name: "Cradle White", hex: "#F1E8D2" },
-  { id: "alphine-snow", name: "Alphine Snow", hex: "#F5F0E1" },
-  { id: "cotton-ball", name: "Cotton Ball", hex: "#F0E8D5" },
-  { id: "secret-white", name: "Secret White", hex: "#EFE9D8" },
+  { id: "crisp-white", name: "Crisp White", hex: "#F6F3E9" },
+  { id: "tahira-white", name: "Tahira White", hex: "#F0EDE3" },
+  { id: "cloud-burst", name: "Cloud Burst", hex: "#DFD8CF" },
+  { id: "china-doll", name: "China Doll", hex: "#EEEBE1" },
+  { id: "big-white", name: "Big White", hex: "#F9F2E9" },
+  { id: "miss-universe", name: "Miss Universe", hex: "#EFEDE7" },
+  { id: "cradle-white", name: "Cradle White", hex: "#F9F3E7" },
+  { id: "alphine-snow", name: "Alphine Snow", hex: "#EDEAE0" },
+  { id: "cotton-ball", name: "Cotton Ball", hex: "#F0EDE3" },
+  { id: "secret-white", name: "Secret White", hex: "#F1EBDB" },
 ];
 
 const frameFinishes: SwatchOption[] = [
-  { id: "black", name: "Black", hex: "#1E1E1E" },
-  { id: "matt-silver", name: "Matt Silver", hex: "#AFB2B3" },
-  { id: "bright-silver", name: "Bright Silver", hex: "#D9DBDC" },
+  { id: "black", name: "Black", hex: "#1B1B1B", icon: "robe" },
+  { id: "matt-silver", name: "Matt Silver", hex: "#AFB2B3", icon: "robe" },
+  { id: "bright-silver", name: "Bright Silver", hex: "#D9DBDC", icon: "robe" },
 ];
 
 export const catalogue: CategorySection[] = [
@@ -60,7 +67,7 @@ export const catalogue: CategorySection[] = [
           {
             id: "custom-orb",
             name: "Custom Orb®",
-            icon: "cladding",
+            image: P + "cladding-custom-orb.jpg",
             hex: "#3A3A3C",
             description:
               "The original corrugated steel profile trusted by Australians for generations — lightweight, durable and versatile.",
@@ -68,7 +75,7 @@ export const catalogue: CategorySection[] = [
           {
             id: "trimdek",
             name: "Trimdek®",
-            icon: "cladding",
+            image: P + "cladding-trimdek.jpg",
             hex: "#4B4D4E",
             description:
               "A modern ribbed profile with clean, defined lines for a sleek, low-maintenance exterior.",
@@ -85,8 +92,7 @@ export const catalogue: CategorySection[] = [
           {
             id: "duragrove",
             name: "Innova Duragrove®",
-            icon: "cladding",
-            hex: "#C9C6BC",
+            image: P + "cladding-duragrove.jpg",
             priceNote: "POA",
             description:
               "Vertically grooved panels with the beauty of painted vertical-joint timber and the benefits of fibre cement.",
@@ -94,16 +100,14 @@ export const catalogue: CategorySection[] = [
           {
             id: "durascape",
             name: "Innova Durascape®",
-            icon: "cladding",
-            hex: "#D3D0C6",
+            image: P + "cladding-durascape.jpg",
             priceNote: "POA",
             description: "The contemporary style of a rendered finish with a clean, modern edge.",
           },
           {
             id: "stratum",
             name: "Innova Stratum®",
-            icon: "cladding",
-            hex: "#DAD7CC",
+            image: P + "cladding-stratum.jpg",
             priceNote: "POA",
             description: "Strong horizontal or vertical line details for modern home designs.",
           },
@@ -190,9 +194,9 @@ export const catalogue: CategorySection[] = [
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "tundra", name: "Tundra", hex: "#C9C2AE", icon: "paver" },
-          { id: "storm-cloud", name: "Storm Cloud", hex: "#4B4844", icon: "paver" },
-          { id: "sea-mist", name: "Sea Mist", hex: "#A9A79C", icon: "paver" },
+          { id: "tundra", name: "Tundra", image: P + "paver-tundra.jpg" },
+          { id: "storm-cloud", name: "Storm Cloud", image: P + "paver-storm-cloud.jpg" },
+          { id: "sea-mist", name: "Sea Mist", image: P + "paver-sea-mist.jpg" },
         ],
       },
     ],
@@ -204,16 +208,17 @@ export const catalogue: CategorySection[] = [
     brand: "Jason Windows",
     intro:
       "Our standard Refined Collection range of aluminium windows and doors. Choose your powder-coating colour to coordinate or contrast with your roof and walls.",
+    heroImage: P + "window-frames-hero.jpg",
     subsections: [
       {
         id: "window-frame-colour",
         tier: "standard",
         mode: "single",
         options: [
-          { id: "pearl-white", name: "Pearl White", hex: "#EDE8DD" },
-          { id: "silver-lustre", name: "Silver Lustre", hex: "#A8A9AA" },
-          { id: "charcoal-lustre", name: "Charcoal Lustre", hex: "#43413F" },
-          { id: "night-sky", name: "Night Sky", hex: "#24211F" },
+          { id: "pearl-white", name: "Pearl White", hex: "#F0F2F0" },
+          { id: "silver-lustre", name: "Silver Lustre", hex: "#B4B4B4" },
+          { id: "charcoal-lustre", name: "Charcoal Lustre", hex: "#515151" },
+          { id: "night-sky", name: "Night Sky", hex: "#2C2D2D" },
         ],
       },
     ],
@@ -228,6 +233,7 @@ export const catalogue: CategorySection[] = [
     brand: "Corinthian / Jason Windows",
     intro: "Internal doors are the Corinthian Flush Panel door as standard.",
     upgradeIntro: "Ensure space permits for the below upgrade.",
+    heroImage: P + "door-front-hero.jpg",
     subsections: [
       {
         id: "internal-door",
@@ -235,7 +241,7 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "corinthian-flush", name: "Corinthian Flush Panel Door", icon: "door", hex: "#F2F0E9" },
+          { id: "corinthian-flush", name: "Corinthian Flush Panel Door", image: P + "door-internal-corinthian.jpg" },
         ],
       },
       {
@@ -269,8 +275,8 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "matt-black", name: "Matt Black", hex: "#232323", icon: "handle" },
-          { id: "satin-chrome", name: "Satin Chrome", hex: "#C7CBCC", icon: "handle" },
+          { id: "matt-black", name: "Matt Black", image: P + "handle-matt-black.jpg" },
+          { id: "satin-chrome", name: "Satin Chrome", image: P + "handle-satin-chrome.jpg" },
         ],
       },
     ],
@@ -282,6 +288,7 @@ export const catalogue: CategorySection[] = [
     brand: "All Things Glass",
     intro: "Mirrored sliding robes to bedrooms with the option to select your frame colour.",
     upgradeIntro: "Upgrade per panel to Super White Kote glass (+$150).",
+    heroImage: P + "robe-hero.jpg",
     subsections: [
       {
         id: "robe-frame",
@@ -339,16 +346,16 @@ export const catalogue: CategorySection[] = [
         id: "cornice-standard",
         tier: "standard",
         mode: "single",
-        options: [{ id: "cove", name: "COVE® Cornice", icon: "cornice", hex: "#EFEDE7" }],
+        options: [{ id: "cove", name: "COVE® Cornice", image: P + "cornice-cove.jpg" }],
       },
       {
         id: "cornice-upgrade",
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "aria", name: "ARIA® Cornice", icon: "cornice", hex: "#EDEAE3", priceNote: "POA" },
-          { id: "symphony", name: "SYMPHONY® Cornice", icon: "cornice", hex: "#EAE7DF", priceNote: "POA" },
-          { id: "trio", name: "TRIO® Cornice", icon: "cornice", hex: "#E7E4DB", priceNote: "POA" },
+          { id: "aria", name: "ARIA® Cornice", image: P + "cornice-aria.jpg", priceNote: "POA" },
+          { id: "symphony", name: "SYMPHONY® Cornice", image: P + "cornice-symphony.jpg", priceNote: "POA" },
+          { id: "trio", name: "TRIO® Cornice", image: P + "cornice-trio.jpg", priceNote: "POA" },
         ],
       },
     ],
@@ -358,16 +365,17 @@ export const catalogue: CategorySection[] = [
     group: "Internal Finishes",
     title: "Skirting Board",
     intro:
-      "Primed skirting is recommended for a modern, sleek look. For a more traditional, detailed skirting, opt for the Federation profile.",
+      "Primed skirting is recommended for a modern, sleek look. For a more traditional, detailed skirting, opt for one of the Federation profiles.",
     subsections: [
       {
         id: "skirting-profile",
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "primed", name: "Primed Skirting", icon: "skirting", hex: "#F1EFEA" },
-          { id: "federation-1", name: "Federation Skirting — Profile A", icon: "skirting", hex: "#EDEAE3", priceNote: "POA" },
-          { id: "federation-2", name: "Federation Skirting — Profile B", icon: "skirting", hex: "#E9E6DE", priceNote: "POA" },
+          { id: "primed", name: "Primed Skirting", image: P + "skirting-primed.jpg" },
+          { id: "federation-1", name: "Federation Skirting — Profile A", image: P + "skirting-federation-1.jpg", priceNote: "POA" },
+          { id: "federation-2", name: "Federation Skirting — Profile B", image: P + "skirting-federation-2.jpg", priceNote: "POA" },
+          { id: "federation-3", name: "Federation Skirting — Profile C", image: P + "skirting-federation-3.jpg", priceNote: "POA" },
         ],
       },
     ],
@@ -378,6 +386,7 @@ export const catalogue: CategorySection[] = [
     title: "Wall Recess Niche",
     intro:
       "Set your home apart with a wall recess niche — subtle depth in living areas, or a display shelf in bathrooms. Consult your Sales Rep.",
+    heroImage: P + "niche-hero.jpg",
     subsections: [
       {
         id: "niche-dimension",
@@ -399,6 +408,7 @@ export const catalogue: CategorySection[] = [
     title: "Skylights",
     intro:
       "A natural-light-filled room transforms an entire space. Consult your Sales Rep to see if a skylight can be designed into your home.",
+    heroImage: P + "skylight-hero.jpg",
     subsections: [
       {
         id: "skylight-add",
@@ -422,8 +432,8 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "white", name: "White", hex: "#F4F2EC", icon: "downlight" },
-          { id: "black", name: "Black", hex: "#232323", icon: "downlight" },
+          { id: "white", name: "White", image: P + "downlight-white.jpg" },
+          { id: "black", name: "Black", image: P + "downlight-black.jpg" },
         ],
       },
       {
@@ -453,18 +463,25 @@ export const catalogue: CategorySection[] = [
     intro: "All kitchen appliances include a 600mm induction cooktop, 600mm range hood and 600mm oven.",
     subsections: [
       {
-        id: "appliance-set",
+        id: "appliance-cooktop",
+        heading: "Induction cooktop",
         tier: "standard",
         mode: "single",
-        options: [
-          {
-            id: "haier-standard",
-            name: "Haier 300 Series set — Box Chimney Rangehood",
-            icon: "cooktop",
-            hex: "#2B2B2B",
-            description: "Induction cooktop HCI604TB3 · Oven HWO60S4LMB3 · Rangehood HC60BLX1",
-          },
-        ],
+        options: [{ id: "haier-cooktop", name: "60cm 300 Series Induction Cooktop", code: "HCI604TB3", image: P + "appliance-cooktop.jpg" }],
+      },
+      {
+        id: "appliance-oven",
+        heading: "Built-in oven",
+        tier: "standard",
+        mode: "single",
+        options: [{ id: "haier-oven", name: "60cm 300 Series Built-In Oven", code: "HWO60S4LMB3", image: P + "appliance-oven.jpg" }],
+      },
+      {
+        id: "appliance-rangehood",
+        heading: "Rangehood",
+        tier: "standard",
+        mode: "single",
+        options: [{ id: "haier-rangehood", name: "60cm 500 Series Box Chimney Wall Rangehood", code: "HC60BLX1", image: P + "appliance-rangehood.jpg" }],
       },
       {
         id: "rangehood-upgrade",
@@ -474,8 +491,7 @@ export const catalogue: CategorySection[] = [
           {
             id: "integrated-rangehood",
             name: "500 Series Integrated Insert Rangehood",
-            icon: "rangehood",
-            hex: "#B9B6AC",
+            image: P + "appliance-rangehood-integrated.jpg",
             code: "HPH60ILX2",
             priceNote: "POA",
           },
@@ -497,10 +513,10 @@ export const catalogue: CategorySection[] = [
         allowOther: true,
         otherLabel: "Tile code (300×600 / 600×600)",
         options: [
-          { id: "subway-white-matte", name: "Subway Tile — White, Matte", hex: "#F3F1EA", icon: "tile" },
-          { id: "subway-white-gloss", name: "Subway Tile — White, Gloss", hex: "#F6F4EE", icon: "tile" },
-          { id: "subway-black-matte", name: "Subway Tile — Black, Matte", hex: "#232323", icon: "tile" },
-          { id: "subway-black-gloss", name: "Subway Tile — Black, Gloss", hex: "#1B1B1B", icon: "tile" },
+          { id: "subway-white-matte", name: "Subway Tile — White, Matte", image: P + "splashback-white.jpg" },
+          { id: "subway-white-gloss", name: "Subway Tile — White, Gloss", image: P + "splashback-white.jpg" },
+          { id: "subway-black-matte", name: "Subway Tile — Black, Matte", image: P + "splashback-black.jpg" },
+          { id: "subway-black-gloss", name: "Subway Tile — Black, Gloss", image: P + "splashback-black.jpg" },
         ],
       },
       {
@@ -537,11 +553,11 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "avalanche", name: "Avalanche", hex: "#E6E4DE", icon: "stone" },
-          { id: "new-frost", name: "New Frost", hex: "#F1F0EC", icon: "stone" },
-          { id: "grey-glitter", name: "Grey Glitter", hex: "#9C9C98", icon: "stone" },
-          { id: "black-glitter", name: "Black Glitter", hex: "#1C1C1C", icon: "stone" },
-          { id: "white-glitter", name: "White Glitter", hex: "#EDEBE6", icon: "stone" },
+          { id: "avalanche", name: "Avalanche", image: P + "stone-avalanche.png" },
+          { id: "new-frost", name: "New Frost", image: P + "stone-new-frost.png" },
+          { id: "grey-glitter", name: "Grey Glitter", image: P + "stone-grey-glitter.png" },
+          { id: "black-glitter", name: "Black Glitter", image: P + "stone-black-glitter.png" },
+          { id: "white-glitter", name: "White Glitter", image: P + "stone-white-glitter.png" },
         ],
       },
     ],
@@ -558,7 +574,7 @@ export const catalogue: CategorySection[] = [
         heading: "Kitchen sink",
         tier: "standard",
         mode: "single",
-        options: [{ id: "mela-triton", name: "MELA Triton 550S Stainless Steel Sink", icon: "sink", hex: "#C9CBCB" }],
+        options: [{ id: "mela-triton", name: "MELA Triton 550S Stainless Steel Sink", image: P + "sink-triton.jpg" }],
       },
       {
         id: "laundry-unit",
@@ -572,7 +588,7 @@ export const catalogue: CategorySection[] = [
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "hana-double", name: "Hana Double Kitchen Sink, top mount", icon: "sink", hex: "#C9CBCB", priceNote: "+$380" },
+          { id: "hana-double", name: "Hana Double Kitchen Sink, top mount", image: P + "sink-hana-double.jpg", priceNote: "+$380" },
           { id: "tiva-175", name: "Tiva 1080 1.75 Sink with Drainer, left bowl", icon: "sink", hex: "#C9CBCB", priceNote: "+$150" },
           { id: "undermount", name: "Convert any top-mount sink to under-mount", icon: "sink", hex: "#C9CBCB", priceNote: "+$380" },
         ],
@@ -610,8 +626,8 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "matte-black", name: "Matte Black", hex: "#232323", icon: "tap" },
-          { id: "chrome", name: "Chrome", hex: "#CDD0D1", icon: "tap" },
+          { id: "matte-black", name: "Matte Black", image: P + "tap-matte-black.jpg" },
+          { id: "chrome", name: "Chrome", image: P + "tap-chrome.jpg" },
         ],
       },
       {
@@ -619,8 +635,8 @@ export const catalogue: CategorySection[] = [
         tier: "upgrade",
         mode: "single",
         options: [
-          { id: "brushed-nickel", name: "Brushed Nickel", hex: "#B9B6AC", icon: "tap", priceNote: "+$390" },
-          { id: "brass", name: "Brass", hex: "#B8925A", icon: "tap", priceNote: "+$450" },
+          { id: "brushed-nickel", name: "Brushed Nickel", image: P + "tap-brushed-nickel.jpg", priceNote: "+$390" },
+          { id: "brass", name: "Brass", image: P + "tap-brass.jpg", priceNote: "+$450" },
         ],
       },
     ],
@@ -637,14 +653,14 @@ export const catalogue: CategorySection[] = [
         heading: "Toilet suite",
         tier: "standard",
         mode: "single",
-        options: [{ id: "mela-elvas", name: "MELA Elvas Single-Hole Tornado Whirlpool Toilet Suite", icon: "toilet", hex: "#F4F3EF" }],
+        options: [{ id: "mela-elvas", name: "MELA Elvas Single-Hole Tornado Whirlpool Toilet Suite", image: P + "toilet-elvas.jpg" }],
       },
       {
         id: "basin",
         heading: "Basin",
         tier: "standard",
         mode: "single",
-        options: [{ id: "mela-baylee", name: "MELA Baylee Above-Counter Basin", icon: "basin", hex: "#F4F3EF" }],
+        options: [{ id: "mela-baylee", name: "MELA Baylee Above-Counter Basin", image: P + "basin-baylee.jpg" }],
       },
       {
         id: "flush-button",
@@ -665,6 +681,7 @@ export const catalogue: CategorySection[] = [
     title: "Shower / Mirrors / Bathtub",
     brand: "Samios",
     intro: "Our signature hob-less walk-in shower forms part of the standard range.",
+    heroImage: P + "shower-hero.jpg",
     subsections: [
       {
         id: "mirror-frame",
@@ -678,7 +695,7 @@ export const catalogue: CategorySection[] = [
         heading: "Bathtub (optional, if applicable to your home)",
         tier: "upgrade",
         mode: "single",
-        options: [{ id: "austin-bath", name: "Austin Freestanding Acrylic Bath, 1700mm", icon: "bath", hex: "#F4F3EF", priceNote: "POA" }],
+        options: [{ id: "austin-bath", name: "Austin Freestanding Acrylic Bath, 1700mm", image: P + "bath-austin.jpg", priceNote: "POA" }],
       },
     ],
   },
@@ -688,6 +705,7 @@ export const catalogue: CategorySection[] = [
     title: "Wet Area Tiles",
     brand: "Kantili Tiles / Bathroom City",
     intro: "Select from the builder's range, or upgrade to the exclusive Rectified Tile Series Package.",
+    heroImage: P + "wet-area-hero.jpg",
     subsections: [
       {
         id: "floor-tile",
@@ -741,9 +759,9 @@ export const catalogue: CategorySection[] = [
         tier: "standard",
         mode: "single",
         options: [
-          { id: "oak", name: "Oak", hex: "#B9895A", icon: "vanity" },
-          { id: "matte-white", name: "Matte White", hex: "#F1EFEA", icon: "vanity" },
-          { id: "hamptons-white", name: "Hamptons White", hex: "#FBFAF7", icon: "vanity" },
+          { id: "oak", name: "Oak", image: P + "vanity-oak.jpg" },
+          { id: "matte-white", name: "Matte White", image: P + "vanity-matte-white.jpg" },
+          { id: "hamptons-white", name: "Hamptons White", image: P + "vanity-hamptons-white.jpg" },
         ],
       },
       {

@@ -15,7 +15,7 @@ export function TopBar() {
     <div className="no-print sticky top-0 z-30 border-b border-brand-200/70 bg-[#f4f1e9]/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
         <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="shrink-0">
-          <GfpLogo className="h-9 origin-left scale-[0.55] sm:scale-[0.65]" />
+          <GfpLogo className="h-9 w-9" />
         </button>
 
         <div className="hidden flex-1 items-center justify-center gap-3 sm:flex">

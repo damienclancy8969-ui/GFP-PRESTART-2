@@ -30,8 +30,8 @@ export function SwatchCard({ option, selected, onClick }: Props) {
       </span>
 
       {option.image ? (
-        <div className="h-16 w-full overflow-hidden" style={{ backgroundColor: option.hex ?? "#eeece5" }}>
-          <img src={option.image} alt={option.name} className="h-full w-full object-cover" loading="lazy" />
+        <div className="h-32 w-full overflow-hidden p-2" style={{ backgroundColor: option.hex ?? "#f4f2ec" }}>
+          <img src={option.image} alt={option.name} className="h-full w-full object-contain" loading="lazy" />
         </div>
       ) : (
         option.hex && (

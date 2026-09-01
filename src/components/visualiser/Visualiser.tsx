@@ -24,7 +24,7 @@ export function Visualiser() {
           <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">Design Visualiser</h2>
         </div>
         <div className="flex w-40 shrink-0 items-center justify-center bg-white/95 px-3 py-3 sm:w-48">
-          <GfpLogo className="scale-90" />
+          <GfpLogo className="h-16 w-16" />
         </div>
       </header>
 

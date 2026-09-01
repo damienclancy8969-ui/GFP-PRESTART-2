@@ -83,6 +83,7 @@ export interface CategorySection {
   brand?: string;
   subsections: SubSection[];
   visualiserTarget?: Partial<Record<VisualiserTarget, string>>;
+  heroImage?: string;
 }
 
 export interface SelectionValue {

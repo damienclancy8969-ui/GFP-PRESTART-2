@@ -2,12 +2,12 @@ import { catalogue } from "../data/catalogue";
 import type { SelectionState, VisualiserTarget } from "../types";
 
 const DEFAULTS: Record<VisualiserTarget, string> = {
-  wallPrimary: "#E6E2D3",
-  wallSecondary: "#AFA692",
-  roof: "#323233",
-  fascia: "#323233",
+  wallPrimary: "#E2E3DE",
+  wallSecondary: "#B6B1AD",
+  roof: "#424244",
+  fascia: "#424244",
   frontDoor: "#B98A55",
-  windowFrame: "#43413F",
+  windowFrame: "#515151",
 };
 
 export function resolveVisualiserColours(selections: SelectionState): Record<VisualiserTarget, string> {

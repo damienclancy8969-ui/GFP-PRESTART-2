@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+import * as THREE from "three";
 import type { VisualiserTarget } from "../../types";
+import type { FootprintPoint } from "../../utils/dxf";
 
 interface Props {
   colours: Record<VisualiserTarget, string>;
@@ -6,6 +9,22 @@ interface Props {
   depth: number;
   wallHeight: number;
   roofPitch: number;
+  outline?: FootprintPoint[] | null;
+}
+
+function FootprintWalls({ outline, wallHeight, color }: { outline: FootprintPoint[]; wallHeight: number; color: string }) {
+  const geometry = useMemo(() => {
+    const shape = new THREE.Shape(outline.map((p) => new THREE.Vector2(p.x, -p.z)));
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: wallHeight, bevelEnabled: false });
+    geo.rotateX(-Math.PI / 2);
+    return geo;
+  }, [outline, wallHeight]);
+
+  return (
+    <mesh geometry={geometry} castShadow receiveShadow>
+      <meshStandardMaterial color={color} roughness={0.85} metalness={0.05} side={THREE.DoubleSide} />
+    </mesh>
+  );
 }
 
 const OVERHANG = 0.35;
@@ -36,23 +55,30 @@ function RoofSlopes({ width, depth, wallHeight, pitch, color }: { width: number;
   );
 }
 
-export function HouseModel({ colours, width, depth, wallHeight, roofPitch }: Props) {
+export function HouseModel({ colours, width, depth, wallHeight, roofPitch, outline }: Props) {
   const secondaryStart = width * 0.62;
   const secondaryWidth = width - secondaryStart;
+  const hasOutline = !!outline && outline.length >= 3;
 
   return (
     <group>
-      {/* Primary wall block */}
-      <mesh position={[0, wallHeight / 2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[width, wallHeight, depth]} />
-        <meshStandardMaterial color={colours.wallPrimary} roughness={0.85} metalness={0.05} />
-      </mesh>
+      {hasOutline ? (
+        <FootprintWalls outline={outline!} wallHeight={wallHeight} color={colours.wallPrimary} />
+      ) : (
+        <>
+          {/* Primary wall block */}
+          <mesh position={[0, wallHeight / 2, 0]} castShadow receiveShadow>
+            <boxGeometry args={[width, wallHeight, depth]} />
+            <meshStandardMaterial color={colours.wallPrimary} roughness={0.85} metalness={0.05} />
+          </mesh>
 
-      {/* Secondary/contrast wall block, offset to read as a feature end */}
-      <mesh position={[width / 2 - secondaryWidth / 2 + 0.01, wallHeight / 2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[secondaryWidth, wallHeight - 0.02, depth + 0.02]} />
-        <meshStandardMaterial color={colours.wallSecondary} roughness={0.85} metalness={0.05} />
-      </mesh>
+          {/* Secondary/contrast wall block, offset to read as a feature end */}
+          <mesh position={[width / 2 - secondaryWidth / 2 + 0.01, wallHeight / 2, 0]} castShadow receiveShadow>
+            <boxGeometry args={[secondaryWidth, wallHeight - 0.02, depth + 0.02]} />
+            <meshStandardMaterial color={colours.wallSecondary} roughness={0.85} metalness={0.05} />
+          </mesh>
+        </>
+      )}
 
       <RoofSlopes width={width} depth={depth} wallHeight={wallHeight} pitch={roofPitch} color={colours.roof} />
 

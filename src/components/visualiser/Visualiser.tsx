@@ -10,11 +10,16 @@ import { GfpLogo } from "../GfpLogo";
 export function Visualiser() {
   const selections = useSelectionStore((s) => s.selections);
   const planFile = useSelectionStore((s) => s.planFile);
+  const planOutline = useSelectionStore((s) => s.planOutline);
   const colours = useMemo(() => resolveVisualiserColours(selections), [selections]);
 
   const [width, setWidth] = useState(9);
   const [depth, setDepth] = useState(6);
   const [pitch, setPitch] = useState(1.4);
+
+  const hasOutline = !!planOutline;
+  const modelWidth = hasOutline ? planOutline.width : width;
+  const modelDepth = hasOutline ? planOutline.depth : depth;
 
   return (
     <section id="visualiser" className="page-card scroll-mt-24">
@@ -39,10 +44,13 @@ export function Visualiser() {
             <path d="M12 9v4M12 16.5v.01M10.3 4.5 2.9 17.2a1.8 1.8 0 0 0 1.56 2.7h15.1a1.8 1.8 0 0 0 1.56-2.7L13.7 4.5a1.8 1.8 0 0 0-3.4 0Z" strokeLinejoin="round" />
           </svg>
           <p>
-            <strong className="text-stone-800">About this preview:</strong> this is an interactive massing model in
-            accurate colours and materials — not a photorealistic render of your uploaded drawing. A true
-            photoreal render from a DWG/PDF needs a server-side CAD-processing and rendering pipeline; this upload
-            slot is built ready to plug one in for production.
+            <strong className="text-stone-800">About this preview:</strong> upload a <strong>DXF</strong> floor plan
+            and this model traces your actual footprint from it automatically, in seconds, right here in the
+            browser — no waiting, nothing sent anywhere. <strong>DWG</strong> files (AutoCAD's native format) can't be
+            read this way without a paid conversion service, so they're attached as a reference only — export DXF
+            from your CAD software instead (a standard option in AutoCAD, DraftSight, Revit and most others) to see
+            your real shape here. Either way, this stays a massing model in accurate colours and materials, not a
+            photorealistic render.
           </p>
         </div>
 
@@ -60,7 +68,14 @@ export function Visualiser() {
                   shadow-mapSize-width={1024}
                   shadow-mapSize-height={1024}
                 />
-                <HouseModel colours={colours} width={width} depth={depth} wallHeight={2.7} roofPitch={pitch} />
+                <HouseModel
+                  colours={colours}
+                  width={modelWidth}
+                  depth={modelDepth}
+                  wallHeight={2.7}
+                  roofPitch={pitch}
+                  outline={planOutline?.points}
+                />
                 <OrbitControls
                   enablePan={false}
                   minDistance={6}
@@ -77,14 +92,23 @@ export function Visualiser() {
 
             <div className="rounded-lg border border-brand-200/70 bg-white/60 px-4 py-3.5">
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-700">Adjust footprint</p>
-              <label className="mb-2.5 block text-[12px] text-stone-600">
-                Width {width.toFixed(1)}m
-                <input type="range" min={5} max={16} step={0.5} value={width} onChange={(e) => setWidth(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
-              </label>
-              <label className="mb-2.5 block text-[12px] text-stone-600">
-                Depth {depth.toFixed(1)}m
-                <input type="range" min={4} max={12} step={0.5} value={depth} onChange={(e) => setDepth(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
-              </label>
+              {hasOutline ? (
+                <p className="mb-2.5 text-[12px] text-stone-500">
+                  Footprint is traced from your uploaded DXF ({modelWidth.toFixed(1)}m × {modelDepth.toFixed(1)}m) —
+                  remove the file to adjust it manually instead.
+                </p>
+              ) : (
+                <>
+                  <label className="mb-2.5 block text-[12px] text-stone-600">
+                    Width {width.toFixed(1)}m
+                    <input type="range" min={5} max={16} step={0.5} value={width} onChange={(e) => setWidth(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
+                  </label>
+                  <label className="mb-2.5 block text-[12px] text-stone-600">
+                    Depth {depth.toFixed(1)}m
+                    <input type="range" min={4} max={12} step={0.5} value={depth} onChange={(e) => setDepth(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
+                  </label>
+                </>
+              )}
               <label className="block text-[12px] text-stone-600">
                 Roof pitch
                 <input type="range" min={0.6} max={2.6} step={0.1} value={pitch} onChange={(e) => setPitch(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />

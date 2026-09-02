@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useSelectionStore, totalSubsectionCount, completedSubsectionCount } from "../state/useSelectionStore";
 import { buildAddendum, estimateUpgradeTotal } from "../utils/addendum";
+import { generateAddendumPdf } from "../utils/generateAddendumPdf";
 import { groupOrder } from "../data/catalogue";
 import { GfpLogo } from "./GfpLogo";
 
@@ -51,10 +52,16 @@ export function Addendum() {
 
         <div className="no-print mb-6 flex flex-wrap gap-2">
           <button
-            onClick={() => window.print()}
+            onClick={() => generateAddendumPdf(groupOrder, categories, { clientName, jobNumber, today, total, hasPoa })}
             className="rounded-md bg-brand-600 px-4 py-2 text-[13px] font-semibold text-white hover:bg-brand-700"
           >
-            Print / Export as PDF
+            Download PDF
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="rounded-md border border-brand-300 px-4 py-2 text-[13px] font-semibold text-brand-700 hover:bg-brand-50"
+          >
+            Print
           </button>
           <p className="flex items-center text-[12px] text-stone-500">
             This document is generated live from the client's pre-start selections and is intended to be attached to

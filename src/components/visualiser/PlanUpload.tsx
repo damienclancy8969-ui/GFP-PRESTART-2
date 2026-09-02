@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useSelectionStore, type PlanFile } from "../../state/useSelectionStore";
 import { renderFirstPageToDataUrl } from "../../utils/pdfPreview";
+import { parseDxfFootprint } from "../../utils/dxf";
 
 function kindFor(name: string): PlanFile["kind"] {
   const ext = name.split(".").pop()?.toLowerCase();
@@ -13,6 +14,8 @@ function kindFor(name: string): PlanFile["kind"] {
 export function PlanUpload() {
   const planFile = useSelectionStore((s) => s.planFile);
   const setPlanFile = useSelectionStore((s) => s.setPlanFile);
+  const planOutline = useSelectionStore((s) => s.planOutline);
+  const setPlanOutline = useSelectionStore((s) => s.setPlanOutline);
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,8 +25,10 @@ export function PlanUpload() {
     async (file: File) => {
       setError(null);
       setLoading(true);
+      setPlanOutline(null);
       try {
         const kind = kindFor(file.name);
+        const isDxf = file.name.toLowerCase().endsWith(".dxf");
         if (kind === "pdf") {
           try {
             const dataUrl = await renderFirstPageToDataUrl(file);
@@ -40,6 +45,15 @@ export function PlanUpload() {
             reader.readAsDataURL(file);
           });
           setPlanFile({ name: file.name, dataUrl, kind });
+        } else if (isDxf) {
+          const text = await file.text();
+          const footprint = parseDxfFootprint(text);
+          setPlanFile({ name: file.name, dataUrl: "", kind });
+          if (footprint) {
+            setPlanOutline(footprint);
+          } else {
+            setError("Read the file, but couldn't find a usable outline in it — the model below is a placeholder.");
+          }
         } else {
           setPlanFile({ name: file.name, dataUrl: "", kind });
         }
@@ -49,7 +63,7 @@ export function PlanUpload() {
         setLoading(false);
       }
     },
-    [setPlanFile]
+    [setPlanFile, setPlanOutline]
   );
 
   return (
@@ -105,11 +119,20 @@ export function PlanUpload() {
           <div className="min-w-0 flex-1">
             <p className="truncate text-[12.5px] font-medium text-stone-800">{planFile.name}</p>
             <p className="text-[11px] text-stone-500">
-              {planFile.kind === "dwg" ? "CAD file received — used as a design reference" : "Reference plan attached"}
+              {planOutline
+                ? "Real footprint traced from this file — the 3D model below now matches its shape"
+                : planFile.kind === "dwg"
+                  ? planFile.name.toLowerCase().endsWith(".dxf")
+                    ? "Couldn't find a usable outline in this file — used as a design reference instead"
+                    : "DWG files can't be read for real geometry for free — attached as a design reference. Export DXF from your CAD software to get a live 3D footprint."
+                  : "Reference plan attached"}
             </p>
           </div>
           <button
-            onClick={() => setPlanFile(null)}
+            onClick={() => {
+              setPlanFile(null);
+              setPlanOutline(null);
+            }}
             className="shrink-0 rounded-md px-2 py-1 text-[11px] font-medium text-stone-500 hover:bg-stone-100"
           >
             Remove

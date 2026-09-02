@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { SelectionState, SelectionValue } from "../types";
 import { catalogue } from "../data/catalogue";
+import type { ParsedFootprint } from "../utils/dxf";
 
 export interface PlanFile {
   name: string;
@@ -14,9 +15,11 @@ interface SelectionStore {
   jobNumber: string;
   selections: SelectionState;
   planFile: PlanFile | null;
+  planOutline: ParsedFootprint | null;
   setClientName: (v: string) => void;
   setJobNumber: (v: string) => void;
   setPlanFile: (f: PlanFile | null) => void;
+  setPlanOutline: (o: ParsedFootprint | null) => void;
   chooseSingle: (subsectionId: string, optionId: string) => void;
   toggleMultiple: (subsectionId: string, optionId: string) => void;
   setOtherText: (subsectionId: string, text: string) => void;
@@ -38,9 +41,11 @@ export const useSelectionStore = create<SelectionStore>()(
       jobNumber: "",
       selections: {},
       planFile: null,
+      planOutline: null,
       setClientName: (v) => set({ clientName: v }),
       setJobNumber: (v) => set({ jobNumber: v }),
       setPlanFile: (f) => set({ planFile: f }),
+      setPlanOutline: (o) => set({ planOutline: o }),
       chooseSingle: (subsectionId, optionId) =>
         set((s) => {
           const cur = getOrInit(s.selections, subsectionId);
@@ -93,7 +98,7 @@ export const useSelectionStore = create<SelectionStore>()(
           cur.itemNotes = { ...(cur.itemNotes ?? {}), [lineItemId]: note };
           return { selections: { ...s.selections, [subsectionId]: cur } };
         }),
-      reset: () => set({ selections: {}, planFile: null, clientName: "", jobNumber: "" }),
+      reset: () => set({ selections: {}, planFile: null, planOutline: null, clientName: "", jobNumber: "" }),
     }),
     { name: "gfp-prestart-selections" }
   )

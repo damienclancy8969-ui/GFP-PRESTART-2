@@ -7,7 +7,7 @@ import type { ParsedFootprint } from "../utils/dxf";
 export interface PlanFile {
   name: string;
   dataUrl: string;
-  kind: "pdf" | "image" | "dwg" | "other";
+  kind: "pdf" | "image" | "dwg" | "3ds" | "other";
 }
 
 interface SelectionStore {

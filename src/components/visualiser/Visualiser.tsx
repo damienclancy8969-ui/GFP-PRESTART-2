@@ -2,8 +2,10 @@ import { Suspense, useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useSelectionStore } from "../../state/useSelectionStore";
+import { useModelStore } from "../../state/useModelStore";
 import { resolveVisualiserColours } from "../../utils/visualiser";
 import { HouseModel } from "./HouseModel";
+import { Model3D } from "./Model3D";
 import { PlanUpload } from "./PlanUpload";
 import { GfpLogo } from "../GfpLogo";
 
@@ -11,6 +13,7 @@ export function Visualiser() {
   const selections = useSelectionStore((s) => s.selections);
   const planFile = useSelectionStore((s) => s.planFile);
   const planOutline = useSelectionStore((s) => s.planOutline);
+  const modelScene = useModelStore((s) => s.scene);
   const colours = useMemo(() => resolveVisualiserColours(selections), [selections]);
 
   const [width, setWidth] = useState(9);
@@ -18,6 +21,7 @@ export function Visualiser() {
   const [pitch, setPitch] = useState(1.4);
 
   const hasOutline = !!planOutline;
+  const hasModel = !!modelScene;
   const modelWidth = hasOutline ? planOutline.width : width;
   const modelDepth = hasOutline ? planOutline.depth : depth;
 
@@ -44,13 +48,13 @@ export function Visualiser() {
             <path d="M12 9v4M12 16.5v.01M10.3 4.5 2.9 17.2a1.8 1.8 0 0 0 1.56 2.7h15.1a1.8 1.8 0 0 0 1.56-2.7L13.7 4.5a1.8 1.8 0 0 0-3.4 0Z" strokeLinejoin="round" />
           </svg>
           <p>
-            <strong className="text-stone-800">About this preview:</strong> upload a <strong>DXF</strong> floor plan
-            and this model traces your actual footprint from it automatically, in seconds, right here in the
-            browser — no waiting, nothing sent anywhere. <strong>DWG</strong> files (AutoCAD's native format) can't be
-            read this way without a paid conversion service, so they're attached as a reference only — export DXF
-            from your CAD software instead (a standard option in AutoCAD, DraftSight, Revit and most others) to see
-            your real shape here. Either way, this stays a massing model in accurate colours and materials, not a
-            photorealistic render.
+            <strong className="text-stone-800">About this preview:</strong> upload a <strong>3DS</strong> model of
+            your design and this shows your actual walls, roof and windows exactly as modelled — colours update live
+            as you make selections below. Upload a <strong>DXF</strong> floor plan instead and this traces your real
+            footprint from it automatically. Both happen in seconds, right here in the browser — no waiting, nothing
+            sent anywhere. <strong>DWG</strong> files (AutoCAD's native format) can't be read this way without a paid
+            conversion service, so they're attached as a reference only — export 3DS or DXF from your design
+            software instead to see your real shape here.
           </p>
         </div>
 
@@ -68,14 +72,18 @@ export function Visualiser() {
                   shadow-mapSize-width={1024}
                   shadow-mapSize-height={1024}
                 />
-                <HouseModel
-                  colours={colours}
-                  width={modelWidth}
-                  depth={modelDepth}
-                  wallHeight={2.7}
-                  roofPitch={pitch}
-                  outline={planOutline?.points}
-                />
+                {hasModel ? (
+                  <Model3D scene={modelScene} colours={colours} />
+                ) : (
+                  <HouseModel
+                    colours={colours}
+                    width={modelWidth}
+                    depth={modelDepth}
+                    wallHeight={2.7}
+                    roofPitch={pitch}
+                    outline={planOutline?.points}
+                  />
+                )}
                 <OrbitControls
                   enablePan={false}
                   minDistance={6}
@@ -92,7 +100,12 @@ export function Visualiser() {
 
             <div className="rounded-lg border border-brand-200/70 bg-white/60 px-4 py-3.5">
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-700">Adjust footprint</p>
-              {hasOutline ? (
+              {hasModel ? (
+                <p className="text-[12px] text-stone-500">
+                  Walls, roof and window shape are all real, from your uploaded 3D model — remove the file to switch
+                  back to a manually adjustable footprint.
+                </p>
+              ) : hasOutline ? (
                 <p className="mb-2.5 text-[12px] text-stone-500">
                   Footprint is traced from your uploaded DXF ({modelWidth.toFixed(1)}m × {modelDepth.toFixed(1)}m) —
                   remove the file to adjust it manually instead.
@@ -109,10 +122,12 @@ export function Visualiser() {
                   </label>
                 </>
               )}
-              <label className="block text-[12px] text-stone-600">
-                Roof pitch
-                <input type="range" min={0.6} max={2.6} step={0.1} value={pitch} onChange={(e) => setPitch(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
-              </label>
+              {!hasModel && (
+                <label className="block text-[12px] text-stone-600">
+                  Roof pitch
+                  <input type="range" min={0.6} max={2.6} step={0.1} value={pitch} onChange={(e) => setPitch(Number(e.target.value))} className="mt-1 w-full accent-brand-600" />
+                </label>
+              )}
             </div>
 
             <div className="rounded-lg border border-brand-200/70 bg-white/60 px-4 py-3.5">

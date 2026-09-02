@@ -1,11 +1,14 @@
 import { useCallback, useRef, useState } from "react";
 import { useSelectionStore, type PlanFile } from "../../state/useSelectionStore";
+import { useModelStore } from "../../state/useModelStore";
 import { renderFirstPageToDataUrl } from "../../utils/pdfPreview";
 import { parseDxfFootprint } from "../../utils/dxf";
+import { loadModel3ds } from "../../utils/loadModel3ds";
 
 function kindFor(name: string): PlanFile["kind"] {
   const ext = name.split(".").pop()?.toLowerCase();
   if (ext === "pdf") return "pdf";
+  if (ext === "3ds") return "3ds";
   if (ext === "dwg" || ext === "dxf") return "dwg";
   if (ext && ["png", "jpg", "jpeg", "webp"].includes(ext)) return "image";
   return "other";
@@ -16,6 +19,8 @@ export function PlanUpload() {
   const setPlanFile = useSelectionStore((s) => s.setPlanFile);
   const planOutline = useSelectionStore((s) => s.planOutline);
   const setPlanOutline = useSelectionStore((s) => s.setPlanOutline);
+  const modelScene = useModelStore((s) => s.scene);
+  const setModelScene = useModelStore((s) => s.setScene);
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,10 +31,20 @@ export function PlanUpload() {
       setError(null);
       setLoading(true);
       setPlanOutline(null);
+      setModelScene(null);
       try {
         const kind = kindFor(file.name);
         const isDxf = file.name.toLowerCase().endsWith(".dxf");
-        if (kind === "pdf") {
+        if (kind === "3ds") {
+          try {
+            const { scene } = await loadModel3ds(file);
+            setModelScene(scene);
+            setPlanFile({ name: file.name, dataUrl: "", kind });
+          } catch {
+            setError("Couldn't load that 3D model — attached as a reference file instead.");
+            setPlanFile({ name: file.name, dataUrl: "", kind: "other" });
+          }
+        } else if (kind === "pdf") {
           try {
             const dataUrl = await renderFirstPageToDataUrl(file);
             setPlanFile({ name: file.name, dataUrl, kind });
@@ -63,7 +78,7 @@ export function PlanUpload() {
         setLoading(false);
       }
     },
-    [setPlanFile, setPlanOutline]
+    [setPlanFile, setPlanOutline, setModelScene]
   );
 
   return (
@@ -87,7 +102,7 @@ export function PlanUpload() {
         <input
           ref={inputRef}
           type="file"
-          accept=".pdf,.dwg,.dxf,.png,.jpg,.jpeg,.webp"
+          accept=".pdf,.dwg,.dxf,.3ds,.png,.jpg,.jpeg,.webp"
           className="hidden"
           onChange={(e) => {
             const file = e.target.files?.[0];
@@ -99,9 +114,9 @@ export function PlanUpload() {
           <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <p className="text-[13px] font-medium text-brand-700">
-          {loading ? "Reading your file…" : "Drop your DWG, PDF or floor plan here"}
+          {loading ? "Reading your file…" : "Drop your 3DS model, DWG, PDF or floor plan here"}
         </p>
-        <p className="text-[11px] text-stone-500">or click to browse — PDF, DWG, DXF, JPG or PNG</p>
+        <p className="text-[11px] text-stone-500">or click to browse — 3DS, PDF, DWG, DXF, JPG or PNG</p>
         {error && <p className="text-[11px] font-medium text-red-600">{error}</p>}
       </div>
 
@@ -119,19 +134,22 @@ export function PlanUpload() {
           <div className="min-w-0 flex-1">
             <p className="truncate text-[12.5px] font-medium text-stone-800">{planFile.name}</p>
             <p className="text-[11px] text-stone-500">
-              {planOutline
-                ? "Real footprint traced from this file — the 3D model below now matches its shape"
-                : planFile.kind === "dwg"
-                  ? planFile.name.toLowerCase().endsWith(".dxf")
-                    ? "Couldn't find a usable outline in this file — used as a design reference instead"
-                    : "DWG files can't be read for real geometry for free — attached as a design reference. Export DXF from your CAD software to get a live 3D footprint."
-                  : "Reference plan attached"}
+              {modelScene
+                ? "Full 3D model loaded — showing your actual walls, roof and windows below"
+                : planOutline
+                  ? "Real footprint traced from this file — the 3D model below now matches its shape"
+                  : planFile.kind === "dwg"
+                    ? planFile.name.toLowerCase().endsWith(".dxf")
+                      ? "Couldn't find a usable outline in this file — used as a design reference instead"
+                      : "DWG files can't be read for real geometry for free — attached as a design reference. Export DXF from your CAD software to get a live 3D footprint."
+                    : "Reference plan attached"}
             </p>
           </div>
           <button
             onClick={() => {
               setPlanFile(null);
               setPlanOutline(null);
+              setModelScene(null);
             }}
             className="shrink-0 rounded-md px-2 py-1 text-[11px] font-medium text-stone-500 hover:bg-stone-100"
           >

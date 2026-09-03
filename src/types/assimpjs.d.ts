@@ -26,6 +26,7 @@ declare module "assimpjs" {
 
   interface AssimpJsConfig {
     locateFile?: (path: string) => string;
+    wasmBinary?: ArrayBuffer;
   }
 
   function assimpjs(config?: AssimpJsConfig): Promise<AssimpJsModule>;

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three-stdlib";
+import assimpjsFactory from "assimpjs";
 
 // Building elements from a real granny flat rarely exceed this in any raw file
 // unit; anything bigger is treated as site/context geometry (a boundary or
@@ -55,8 +56,12 @@ function framingBox(scene: THREE.Group): THREE.Box3 {
  * paid conversion service.
  */
 export async function loadModel3ds(file: File): Promise<Loaded3dsModel> {
-  const assimpjsFactory = (await import("assimpjs")).default;
-  const ajs = await assimpjsFactory({ locateFile: () => "/assimpjs.wasm" });
+  // Fetched (rather than left to the library's own locateFile-based fetch) so
+  // the packaged single-file demo can substitute a data: URI for this exact
+  // request — see build-artifact.mjs. wasmBinary makes the WASM runtime skip
+  // its own internal fetch entirely and use these bytes directly.
+  const wasmBinary = await fetch("/assimpjs.wasm").then((r) => r.arrayBuffer());
+  const ajs = await assimpjsFactory({ wasmBinary });
 
   const buffer = await file.arrayBuffer();
   const fileList = new ajs.FileList();

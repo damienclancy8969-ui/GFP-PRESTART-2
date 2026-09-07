@@ -3,7 +3,7 @@ import type { CategorySection, SwatchOption } from "../types";
 // Shared colour palettes. Hex values are sampled directly from the swatch
 // chips embedded in the physical Granny Flats Perth Pre-Start Selection
 // Booklet PDF, so they match the booklet exactly rather than being approximated.
-const P = "/products/";
+const P = `${import.meta.env.BASE_URL}products/`;
 
 const colorbondExterior: SwatchOption[] = [
   { id: "surfmist", name: "Surfmist®", hex: "#E2E3DE" },

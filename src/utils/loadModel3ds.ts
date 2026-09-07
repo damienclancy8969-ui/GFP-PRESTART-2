@@ -60,7 +60,7 @@ export async function loadModel3ds(file: File): Promise<Loaded3dsModel> {
   // the packaged single-file demo can substitute a data: URI for this exact
   // request — see build-artifact.mjs. wasmBinary makes the WASM runtime skip
   // its own internal fetch entirely and use these bytes directly.
-  const wasmBinary = await fetch("/assimpjs.wasm").then((r) => r.arrayBuffer());
+  const wasmBinary = await fetch(`${import.meta.env.BASE_URL}assimpjs.wasm`).then((r) => r.arrayBuffer());
   const ajs = await assimpjsFactory({ wasmBinary });
 
   const buffer = await file.arrayBuffer();

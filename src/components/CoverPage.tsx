@@ -29,7 +29,11 @@ export function CoverPage() {
       </div>
 
       <div className="relative mx-4 mb-4 aspect-[16/10] overflow-hidden rounded-xl sm:mx-8 sm:mb-8">
-        <img src="/products/cover-hero.jpg" alt="Granny Flats Perth concept home" className="h-full w-full object-cover" />
+        <img
+          src={`${import.meta.env.BASE_URL}products/cover-hero.jpg`}
+          alt="Granny Flats Perth concept home"
+          className="h-full w-full object-cover"
+        />
         <div className="absolute inset-0 flex items-end justify-center pb-6">
           <span className="rounded-full bg-black/40 px-4 py-1.5 text-[11px] font-medium tracking-wide text-white backdrop-blur-sm">
             Concept render — your 3D design will update below as you make selections

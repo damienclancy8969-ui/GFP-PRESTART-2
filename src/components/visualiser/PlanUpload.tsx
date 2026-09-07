@@ -40,8 +40,9 @@ export function PlanUpload() {
             const { scene } = await loadModel3ds(file);
             setModelScene(scene);
             setPlanFile({ name: file.name, dataUrl: "", kind });
-          } catch {
-            setError("Couldn't load that 3D model — attached as a reference file instead.");
+          } catch (err) {
+            const detail = err instanceof Error ? err.message : String(err);
+            setError(`Couldn't load that 3D model (${detail}) — attached as a reference file instead.`);
             setPlanFile({ name: file.name, dataUrl: "", kind: "other" });
           }
         } else if (kind === "pdf") {

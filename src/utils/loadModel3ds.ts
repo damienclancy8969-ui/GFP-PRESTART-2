@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three-stdlib";
 import assimpjsFactory from "assimpjs";
+import { analyzeModelMaterials, type ModelMaterialAnalysis } from "./analyzeModelMaterials";
 
 // Building elements from a real granny flat rarely exceed this in any raw file
 // unit; anything bigger is treated as site/context geometry (a boundary or
@@ -17,7 +18,7 @@ const FALLBACK_TARGET_METRES = 12;
 const PLAUSIBLE_MIN_METRES = 2;
 const PLAUSIBLE_MAX_METRES = 60;
 
-export interface Loaded3dsModel {
+export interface Loaded3dsModel extends ModelMaterialAnalysis {
   scene: THREE.Group;
   width: number;
   depth: number;
@@ -91,11 +92,16 @@ export async function loadModel3ds(file: File): Promise<Loaded3dsModel> {
 
   scene.scale.setScalar(scale);
   scene.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale);
+  scene.updateWorldMatrix(true, true);
+
+  const { autoAssignments, materials } = analyzeModelMaterials(scene);
 
   return {
     scene,
     width: rawSize.x * scale,
     depth: rawSize.z * scale,
     height: rawSize.y * scale,
+    autoAssignments,
+    materials,
   };
 }

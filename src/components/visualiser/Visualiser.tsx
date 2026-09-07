@@ -3,9 +3,11 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useSelectionStore } from "../../state/useSelectionStore";
 import { useModelStore } from "../../state/useModelStore";
+import { useMaterialOverridesStore, getOverridesForFile } from "../../state/useMaterialOverridesStore";
 import { resolveVisualiserColours } from "../../utils/visualiser";
 import { HouseModel } from "./HouseModel";
 import { Model3D } from "./Model3D";
+import { MaterialAssignPanel } from "./MaterialAssignPanel";
 import { PlanUpload } from "./PlanUpload";
 import { GfpLogo } from "../GfpLogo";
 
@@ -14,16 +16,22 @@ export function Visualiser() {
   const planFile = useSelectionStore((s) => s.planFile);
   const planOutline = useSelectionStore((s) => s.planOutline);
   const modelScene = useModelStore((s) => s.scene);
+  const autoAssignments = useModelStore((s) => s.autoAssignments);
+  const overridesByFile = useMaterialOverridesStore((s) => s.overridesByFile);
+  const setOverride = useMaterialOverridesStore((s) => s.setOverride);
   const colours = useMemo(() => resolveVisualiserColours(selections), [selections]);
 
   const [width, setWidth] = useState(9);
   const [depth, setDepth] = useState(6);
   const [pitch, setPitch] = useState(1.4);
+  const [pickMode, setPickMode] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
 
   const hasOutline = !!planOutline;
   const hasModel = !!modelScene;
   const modelWidth = hasOutline ? planOutline.width : width;
   const modelDepth = hasOutline ? planOutline.depth : depth;
+  const overrides = planFile ? getOverridesForFile(overridesByFile, planFile.name) : {};
 
   return (
     <section id="visualiser" className="page-card scroll-mt-24">
@@ -59,7 +67,8 @@ export function Visualiser() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="overflow-hidden rounded-xl border border-brand-300/60 bg-gradient-to-b from-sky-100 to-stone-100" style={{ height: 420 }}>
+          <div>
+            <div className="overflow-hidden rounded-xl border border-brand-300/60 bg-gradient-to-b from-sky-100 to-stone-100" style={{ height: 420 }}>
             <Canvas shadows camera={{ position: [10, 6, 11], fov: 40 }}>
               <Suspense fallback={null}>
                 <color attach="background" args={["#cfe3ee"]} />
@@ -73,7 +82,15 @@ export function Visualiser() {
                   shadow-mapSize-height={1024}
                 />
                 {hasModel ? (
-                  <Model3D scene={modelScene} colours={colours} />
+                  <Model3D
+                    scene={modelScene}
+                    colours={colours}
+                    autoAssignments={autoAssignments}
+                    overrides={overrides}
+                    pickMode={pickMode}
+                    selectedMaterial={selectedMaterial}
+                    onPick={setSelectedMaterial}
+                  />
                 ) : (
                   <HouseModel
                     colours={colours}
@@ -94,9 +111,40 @@ export function Visualiser() {
               </Suspense>
             </Canvas>
           </div>
+          {hasModel && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => {
+                  setPickMode((v) => !v);
+                  setSelectedMaterial(null);
+                }}
+                className={`rounded-md px-3 py-1.5 text-[12px] font-semibold transition ${
+                  pickMode ? "bg-gold-600 text-white" : "border border-brand-300 text-brand-700 hover:bg-brand-50"
+                }`}
+              >
+                {pickMode ? "Done fixing colours" : "Fix colours"}
+              </button>
+              {pickMode && (
+                <p className="text-[11px] text-stone-500">Click any part of the model to assign what it should be.</p>
+              )}
+            </div>
+          )}
+          </div>
 
           <div className="flex flex-col gap-5">
             <PlanUpload />
+
+            {selectedMaterial && (
+              <MaterialAssignPanel
+                materialName={selectedMaterial}
+                current={overrides[selectedMaterial] ?? autoAssignments[selectedMaterial] ?? null}
+                onAssign={(target) => {
+                  if (planFile) setOverride(planFile.name, selectedMaterial, target);
+                  setSelectedMaterial(null);
+                }}
+                onClose={() => setSelectedMaterial(null)}
+              />
+            )}
 
             <div className="rounded-lg border border-brand-200/70 bg-white/60 px-4 py-3.5">
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-brand-700">Adjust footprint</p>

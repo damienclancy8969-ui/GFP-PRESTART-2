@@ -20,7 +20,7 @@ export function PlanUpload() {
   const planOutline = useSelectionStore((s) => s.planOutline);
   const setPlanOutline = useSelectionStore((s) => s.setPlanOutline);
   const modelScene = useModelStore((s) => s.scene);
-  const setModelScene = useModelStore((s) => s.setScene);
+  const setModel = useModelStore((s) => s.setModel);
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,14 +31,14 @@ export function PlanUpload() {
       setError(null);
       setLoading(true);
       setPlanOutline(null);
-      setModelScene(null);
+      setModel(null);
       try {
         const kind = kindFor(file.name);
         const isDxf = file.name.toLowerCase().endsWith(".dxf");
         if (kind === "3ds") {
           try {
-            const { scene } = await loadModel3ds(file);
-            setModelScene(scene);
+            const model = await loadModel3ds(file);
+            setModel(model);
             setPlanFile({ name: file.name, dataUrl: "", kind });
           } catch (err) {
             const detail = err instanceof Error ? err.message : String(err);
@@ -79,7 +79,7 @@ export function PlanUpload() {
         setLoading(false);
       }
     },
-    [setPlanFile, setPlanOutline, setModelScene]
+    [setPlanFile, setPlanOutline, setModel]
   );
 
   return (
@@ -150,7 +150,7 @@ export function PlanUpload() {
             onClick={() => {
               setPlanFile(null);
               setPlanOutline(null);
-              setModelScene(null);
+              setModel(null);
             }}
             className="shrink-0 rounded-md px-2 py-1 text-[11px] font-medium text-stone-500 hover:bg-stone-100"
           >

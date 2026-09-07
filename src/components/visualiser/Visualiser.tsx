@@ -1,15 +1,40 @@
-import { Suspense, useMemo, useState } from "react";
+import { Component, Suspense, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import * as THREE from "three";
 import { useSelectionStore } from "../../state/useSelectionStore";
 import { useModelStore } from "../../state/useModelStore";
 import { useMaterialOverridesStore, getOverridesForFile } from "../../state/useMaterialOverridesStore";
-import { resolveVisualiserColours } from "../../utils/visualiser";
+import { useRoomViewsStore, getWaypointsForFile, type RoomWaypoint } from "../../state/useRoomViewsStore";
+import { resolveVisualiserColours, resolveVisualiserPattern } from "../../utils/visualiser";
 import { HouseModel } from "./HouseModel";
 import { Model3D } from "./Model3D";
 import { MaterialAssignPanel } from "./MaterialAssignPanel";
 import { PlanUpload } from "./PlanUpload";
 import { GfpLogo } from "../GfpLogo";
+
+const EXTERIOR_CAMERA: [number, number, number] = [10, 6, 11];
+const EXTERIOR_TARGET: [number, number, number] = [0, 1.3, 0];
+const EYE_HEIGHT = 1.6;
+
+// The HDRI Environment loads from drei's CDN at runtime — if that fetch
+// fails (blocked network, CDN hiccup) it throws inside the Canvas tree.
+// Without this boundary that crashes the whole app to a blank page, not
+// just the reflections; the scene's own lights are enough to render
+// without it, so we just drop Environment and keep going.
+class EnvironmentBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error: unknown) {
+    console.warn("3D viewer: environment reflections unavailable, continuing without them", error);
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 export function Visualiser() {
   const selections = useSelectionStore((s) => s.selections);
@@ -17,21 +42,58 @@ export function Visualiser() {
   const planOutline = useSelectionStore((s) => s.planOutline);
   const modelScene = useModelStore((s) => s.scene);
   const autoAssignments = useModelStore((s) => s.autoAssignments);
+  const modelMaterials = useModelStore((s) => s.materials);
   const overridesByFile = useMaterialOverridesStore((s) => s.overridesByFile);
   const setOverride = useMaterialOverridesStore((s) => s.setOverride);
+  const waypointsByFile = useRoomViewsStore((s) => s.waypointsByFile);
+  const addWaypoint = useRoomViewsStore((s) => s.addWaypoint);
+  const removeWaypoint = useRoomViewsStore((s) => s.removeWaypoint);
   const colours = useMemo(() => resolveVisualiserColours(selections), [selections]);
+  const pattern = useMemo(() => resolveVisualiserPattern(selections), [selections]);
 
   const [width, setWidth] = useState(9);
   const [depth, setDepth] = useState(6);
   const [pitch, setPitch] = useState(1.4);
   const [pickMode, setPickMode] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
+  const [roomViewMode, setRoomViewMode] = useState(false);
+  const [pendingWaypoint, setPendingWaypoint] = useState<[number, number, number] | null>(null);
+  const [waypointLabel, setWaypointLabel] = useState("");
+
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
 
   const hasOutline = !!planOutline;
   const hasModel = !!modelScene;
   const modelWidth = hasOutline ? planOutline.width : width;
   const modelDepth = hasOutline ? planOutline.depth : depth;
   const overrides = planFile ? getOverridesForFile(overridesByFile, planFile.name) : {};
+  const waypoints = planFile ? getWaypointsForFile(waypointsByFile, planFile.name) : [];
+
+  const jumpTo = (position: [number, number, number]) => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    controls.object.position.set(position[0], EYE_HEIGHT, position[2]);
+    controls.target.set(0, EYE_HEIGHT, 0);
+    controls.update();
+  };
+
+  const resetToExterior = () => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    controls.object.position.set(...EXTERIOR_CAMERA);
+    controls.target.set(...EXTERIOR_TARGET);
+    controls.update();
+  };
+
+  const saveWaypoint = () => {
+    if (!planFile || !pendingWaypoint) return;
+    const label = waypointLabel.trim() || `Room ${waypoints.length + 1}`;
+    const waypoint: RoomWaypoint = { id: `${Date.now()}`, label, position: pendingWaypoint };
+    addWaypoint(planFile.name, waypoint);
+    jumpTo(pendingWaypoint);
+    setPendingWaypoint(null);
+    setWaypointLabel("");
+  };
 
   return (
     <section id="visualiser" className="page-card scroll-mt-24">
@@ -69,7 +131,11 @@ export function Visualiser() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div>
             <div className="overflow-hidden rounded-xl border border-brand-300/60 bg-gradient-to-b from-sky-100 to-stone-100" style={{ height: 420 }}>
-            <Canvas shadows camera={{ position: [10, 6, 11], fov: 40 }}>
+            <Canvas
+              shadows
+              camera={{ position: [10, 6, 11], fov: 40 }}
+              gl={{ toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+            >
               <Suspense fallback={null}>
                 <color attach="background" args={["#cfe3ee"]} />
                 <hemisphereLight args={["#cfe3ee", "#7c9066", 0.65]} />
@@ -81,19 +147,27 @@ export function Visualiser() {
                   shadow-mapSize-width={1024}
                   shadow-mapSize-height={1024}
                 />
+                <EnvironmentBoundary>
+                  <Environment preset="city" environmentIntensity={0.4} />
+                </EnvironmentBoundary>
                 {hasModel ? (
                   <Model3D
                     scene={modelScene}
                     colours={colours}
+                    pattern={pattern}
                     autoAssignments={autoAssignments}
                     overrides={overrides}
+                    materials={modelMaterials}
                     pickMode={pickMode}
                     selectedMaterial={selectedMaterial}
                     onPick={setSelectedMaterial}
+                    roomViewMode={roomViewMode}
+                    onDropWaypoint={setPendingWaypoint}
                   />
                 ) : (
                   <HouseModel
                     colours={colours}
+                    pattern={pattern}
                     width={modelWidth}
                     depth={modelDepth}
                     wallHeight={2.7}
@@ -102,8 +176,9 @@ export function Visualiser() {
                   />
                 )}
                 <OrbitControls
+                  ref={controlsRef}
                   enablePan={false}
-                  minDistance={6}
+                  minDistance={0.3}
                   maxDistance={22}
                   maxPolarAngle={Math.PI / 2.1}
                   target={[0, 1.3, 0]}
@@ -117,6 +192,8 @@ export function Visualiser() {
                 onClick={() => {
                   setPickMode((v) => !v);
                   setSelectedMaterial(null);
+                  setRoomViewMode(false);
+                  setPendingWaypoint(null);
                 }}
                 className={`rounded-md px-3 py-1.5 text-[12px] font-semibold transition ${
                   pickMode ? "bg-gold-600 text-white" : "border border-brand-300 text-brand-700 hover:bg-brand-50"
@@ -124,9 +201,81 @@ export function Visualiser() {
               >
                 {pickMode ? "Done fixing colours" : "Fix colours"}
               </button>
+              <button
+                onClick={() => {
+                  setRoomViewMode((v) => !v);
+                  setPickMode(false);
+                  setSelectedMaterial(null);
+                  setPendingWaypoint(null);
+                  if (roomViewMode) resetToExterior();
+                }}
+                className={`rounded-md px-3 py-1.5 text-[12px] font-semibold transition ${
+                  roomViewMode ? "bg-gold-600 text-white" : "border border-brand-300 text-brand-700 hover:bg-brand-50"
+                }`}
+              >
+                {roomViewMode ? "Done setting up room views" : "Set up room views"}
+              </button>
               {pickMode && (
                 <p className="text-[11px] text-stone-500">Click any part of the model to assign what it should be.</p>
               )}
+              {roomViewMode && !pendingWaypoint && (
+                <p className="text-[11px] text-stone-500">Click a spot on the floor to save a room view there.</p>
+              )}
+            </div>
+          )}
+          {roomViewMode && pendingWaypoint && (
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-md border border-gold-500/40 bg-gold-500/10 px-3 py-2">
+              <input
+                type="text"
+                value={waypointLabel}
+                onChange={(e) => setWaypointLabel(e.target.value)}
+                placeholder="e.g. Bedroom 1"
+                autoFocus
+                className="rounded border border-brand-300 px-2 py-1 text-[12px]"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveWaypoint();
+                  if (e.key === "Escape") setPendingWaypoint(null);
+                }}
+              />
+              <button
+                onClick={saveWaypoint}
+                className="rounded-md bg-brand-700 px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-brand-800"
+              >
+                Save view
+              </button>
+              <button
+                onClick={() => setPendingWaypoint(null)}
+                className="rounded-md border border-brand-300 px-3 py-1.5 text-[12px] font-semibold text-brand-700 hover:bg-brand-50"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+          {hasModel && waypoints.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                onClick={resetToExterior}
+                className="rounded-md border border-brand-300 px-3 py-1.5 text-[12px] font-semibold text-brand-700 hover:bg-brand-50"
+              >
+                Exterior view
+              </button>
+              {waypoints.map((w) => (
+                <span
+                  key={w.id}
+                  className="flex items-center gap-1 rounded-md border border-brand-300 pl-3 pr-1.5 py-1.5 text-[12px] font-semibold text-brand-700"
+                >
+                  <button onClick={() => jumpTo(w.position)} className="hover:underline">
+                    {w.label}
+                  </button>
+                  <button
+                    onClick={() => planFile && removeWaypoint(planFile.name, w.id)}
+                    aria-label={`Remove ${w.label}`}
+                    className="ml-1 rounded px-1 text-stone-400 hover:bg-red-50 hover:text-red-600"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
             </div>
           )}
           </div>

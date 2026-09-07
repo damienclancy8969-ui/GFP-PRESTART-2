@@ -19,8 +19,12 @@ const MIN_SECONDARY_WALL_AREA_FRACTION = 0.05;
 
 // Interior joinery/fixtures can present large flat side-facing surfaces too
 // (a run of kitchen cabinet doors, a wardrobe) — exclude anything that reads
-// as interior fit-out from wall-colour candidacy, even if unnamed otherwise.
-const NOT_A_WALL = /cabinet|bench|kitchen|wardrobe|robe|shelf|vanity|counter|ceramic|\btiles?\b|glass|stainless|chrome|floor|carpet|ceiling|splashback/i;
+// as interior fit-out, or site/ground context (grass, paving, driveway),
+// from colour candidacy entirely, even if unnamed otherwise. Exported so the
+// manual click-to-correct tool can reject clicks on these too, not just
+// auto-detection.
+export const NOT_ASSIGNABLE =
+  /cabinet|bench|kitchen|wardrobe|robe|shelf|vanity|counter|ceramic|\btiles?\b|glass|stainless|chrome|floor|carpet|ceiling|splashback|grass|lawn|\bground\b|earth|paving|asphalt|driveway|concrete.?path/i;
 
 const NAME_RULES: [VisualiserTarget, RegExp][] = [
   ["roof", /\broof\b|trim.?deck|corrugat/i],
@@ -138,7 +142,7 @@ export function analyzeModelMaterials(scene: THREE.Group): ModelMaterialAnalysis
   }
 
   const wallCandidates = allStats
-    .filter((s) => autoAssignments[s.name] === null && !NOT_A_WALL.test(s.name) && dominantOrientation(s) === "side")
+    .filter((s) => autoAssignments[s.name] === null && !NOT_ASSIGNABLE.test(s.name) && dominantOrientation(s) === "side")
     .sort((a, b) => b.sideFacingArea - a.sideFacingArea);
 
   if (wallCandidates[0]) {

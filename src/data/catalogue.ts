@@ -46,6 +46,14 @@ const frameFinishes: SwatchOption[] = [
   { id: "bright-silver", name: "Bright Silver", image: P + "robe-bright-silver.png" },
 ];
 
+// Colour arrays like colorbondExterior/colorbondRoofFull are reused across
+// several sections (e.g. the same 7 Colorbond colours apply to both the
+// primary and secondary wall) — this attaches a section-specific inspo
+// search query per use, without needing separate copies of each array.
+function withInspo(options: SwatchOption[], contextLabel: string, brand = "Colorbond"): SwatchOption[] {
+  return options.map((o) => ({ ...o, inspoQuery: `${brand} ${o.name.replace(/®/g, "")} ${contextLabel}` }));
+}
+
 export const catalogue: CategorySection[] = [
   // ---------------------------------------------------------------- EXTERIOR
   {
@@ -141,7 +149,7 @@ export const catalogue: CategorySection[] = [
         mode: "single",
         allowOther: true,
         otherLabel: "Other colour",
-        options: colorbondExterior,
+        options: withInspo(colorbondExterior, "wall cladding house"),
       },
       {
         id: "wall-secondary",
@@ -150,7 +158,7 @@ export const catalogue: CategorySection[] = [
         mode: "single",
         allowOther: true,
         otherLabel: "Other colour",
-        options: colorbondExterior,
+        options: withInspo(colorbondExterior, "wall cladding house"),
       },
     ],
     visualiserTarget: { wallPrimary: "wall-primary", wallSecondary: "wall-secondary" },
@@ -169,7 +177,7 @@ export const catalogue: CategorySection[] = [
         mode: "single",
         allowOther: true,
         otherLabel: "Other colour",
-        options: colorbondRoofFull,
+        options: withInspo(colorbondRoofFull, "roof"),
       },
     ],
     visualiserTarget: { roof: "roof-colour" },
@@ -188,7 +196,7 @@ export const catalogue: CategorySection[] = [
         mode: "single",
         allowOther: true,
         otherLabel: "Other (gutter / fascia / downpipe)",
-        options: colorbondRoofFull,
+        options: withInspo(colorbondRoofFull, "fascia gutter"),
       },
     ],
     visualiserTarget: { fascia: "fascia-colour" },
@@ -225,12 +233,16 @@ export const catalogue: CategorySection[] = [
         id: "window-frame-colour",
         tier: "standard",
         mode: "single",
-        options: [
-          { id: "pearl-white", name: "Pearl White", hex: "#F0F2F0" },
-          { id: "silver-lustre", name: "Silver Lustre", hex: "#B4B4B4" },
-          { id: "charcoal-lustre", name: "Charcoal Lustre", hex: "#515151" },
-          { id: "night-sky", name: "Night Sky", hex: "#2C2D2D" },
-        ],
+        options: withInspo(
+          [
+            { id: "pearl-white", name: "Pearl White", hex: "#F0F2F0" },
+            { id: "silver-lustre", name: "Silver Lustre", hex: "#B4B4B4" },
+            { id: "charcoal-lustre", name: "Charcoal Lustre", hex: "#515151" },
+            { id: "night-sky", name: "Night Sky", hex: "#2C2D2D" },
+          ],
+          "window frame",
+          "Jason Windows"
+        ),
       },
     ],
     visualiserTarget: { windowFrame: "window-frame-colour" },

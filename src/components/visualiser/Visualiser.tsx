@@ -122,9 +122,7 @@ export function Visualiser() {
             your design and this shows your actual walls, roof and windows exactly as modelled — colours update live
             as you make selections below. Upload a <strong>DXF</strong> floor plan instead and this traces your real
             footprint from it automatically. Both happen in seconds, right here in the browser — no waiting, nothing
-            sent anywhere. <strong>DWG</strong> files (AutoCAD's native format) can't be read this way without a paid
-            conversion service, so they're attached as a reference only — export 3DS or DXF from your design
-            software instead to see your real shape here.
+            sent anywhere.
           </p>
         </div>
 

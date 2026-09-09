@@ -125,7 +125,7 @@ export function HouseModel({ colours, pattern, width, depth, wallHeight, roofPit
       {/* Front door */}
       <mesh position={[-width / 4, 1.05, depth / 2 + 0.02]} castShadow>
         <boxGeometry args={[0.9, 2.1, 0.06]} />
-        <meshStandardMaterial color={colours.frontDoor} roughness={0.55} metalness={0.05} />
+        <meshStandardMaterial color={colours.frontDoor} roughness={0.75} metalness={0} />
       </mesh>
 
       {/* Window with frame colour */}

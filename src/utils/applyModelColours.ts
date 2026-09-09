@@ -16,7 +16,7 @@ const TARGET_STYLE: Partial<Record<VisualiserTarget, { roughness: number; metaln
   roof: { roughness: 0.4, metalness: 0.12 },
   fascia: { roughness: 0.4, metalness: 0.12 },
   windowFrame: { roughness: 0.4, metalness: 0.2 },
-  frontDoor: { roughness: 0.55, metalness: 0.05 },
+  frontDoor: { roughness: 0.75, metalness: 0 },
 };
 
 /**

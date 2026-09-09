@@ -134,21 +134,26 @@ export function Visualiser() {
             <Canvas
               shadows
               camera={{ position: [10, 6, 11], fov: 40 }}
-              gl={{ toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1 }}
+              gl={{ toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.25 }}
             >
               <Suspense fallback={null}>
-                <color attach="background" args={["#cfe3ee"]} />
-                <hemisphereLight args={["#cfe3ee", "#7c9066", 0.65]} />
-                <ambientLight intensity={0.35} />
+                <color attach="background" args={["#d4e6f5"]} />
+                <hemisphereLight args={["#e8f0f8", "#8fa575", 0.72]} />
+                <ambientLight intensity={0.42} />
                 <directionalLight
-                  position={[8, 10, 6]}
-                  intensity={1.8}
+                  position={[10, 12, 8]}
+                  intensity={2.1}
                   castShadow
-                  shadow-mapSize-width={1024}
-                  shadow-mapSize-height={1024}
+                  shadow-mapSize-width={2048}
+                  shadow-mapSize-height={2048}
+                  shadow-camera-left={-16}
+                  shadow-camera-right={16}
+                  shadow-camera-top={16}
+                  shadow-camera-bottom={-4}
+                  shadow-camera-far={40}
                 />
                 <EnvironmentBoundary>
-                  <Environment preset="city" environmentIntensity={0.4} />
+                  <Environment preset="city" environmentIntensity={0.55} />
                 </EnvironmentBoundary>
                 {hasModel ? (
                   <Model3D
@@ -287,6 +292,7 @@ export function Visualiser() {
               <MaterialAssignPanel
                 materialName={selectedMaterial}
                 current={overrides[selectedMaterial] ?? autoAssignments[selectedMaterial] ?? null}
+                autoDetected={autoAssignments[selectedMaterial] ?? null}
                 onAssign={(target) => {
                   if (planFile) setOverride(planFile.name, selectedMaterial, target);
                   setSelectedMaterial(null);

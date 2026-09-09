@@ -38,6 +38,27 @@ export function applyModelColours(
   const areaByName = new Map(materials.map((m) => [m.name, m.area]));
   const seen = new Set<THREE.Material>();
 
+  // Detect if multiple targets map to the same material (possible sync issue)
+  const targetsByMaterial = new Map<string, VisualiserTarget[]>();
+  for (const [materialName, override] of Object.entries(overrides)) {
+    if (override === "none") continue;
+    const target = override as VisualiserTarget;
+    const existing = targetsByMaterial.get(materialName) ?? [];
+    existing.push(target);
+    targetsByMaterial.set(materialName, existing);
+  }
+  // Warn if two roof/wall/fascia targets point to the same material
+  const structuralTargets = new Set(["roof", "wallPrimary", "wallSecondary", "fascia"]);
+  for (const [material, targets] of targetsByMaterial) {
+    const structural = targets.filter((t) => structuralTargets.has(t));
+    if (structural.length > 1) {
+      console.warn(
+        `Material '${material}' is assigned to multiple structural targets: ${structural.join(", ")}. ` +
+          `This may cause unexpected colour sync. Consider using "Don't recolour" on one of them.`
+      );
+    }
+  }
+
   scene.traverse((obj) => {
     const mesh = obj as THREE.Mesh;
     if (!mesh.isMesh) return;

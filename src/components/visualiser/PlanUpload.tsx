@@ -115,9 +115,9 @@ export function PlanUpload() {
           <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <p className="text-[13px] font-medium text-brand-700">
-          {loading ? "Reading your file…" : "Drop your 3DS model, DWG, PDF or floor plan here"}
+          {loading ? "Reading your file…" : "Drop your 3DS model or floor plan here"}
         </p>
-        <p className="text-[11px] text-stone-500">or click to browse — 3DS, PDF, DWG, DXF, JPG or PNG</p>
+        <p className="text-[11px] text-stone-500">or click to browse — 3DS, DXF, JPG or PNG</p>
         {error && <p className="text-[11px] font-medium text-red-600">{error}</p>}
       </div>
 

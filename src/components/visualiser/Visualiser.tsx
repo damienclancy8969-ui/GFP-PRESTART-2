@@ -292,7 +292,21 @@ export function Visualiser() {
                 current={overrides[selectedMaterial] ?? autoAssignments[selectedMaterial] ?? null}
                 autoDetected={autoAssignments[selectedMaterial] ?? null}
                 onAssign={(target) => {
-                  if (planFile) setOverride(planFile.name, selectedMaterial, target);
+                  if (!planFile) return;
+                  // When assigning to a structural target, remove from other structural targets to prevent sync
+                  const structuralTargets = ["roof", "wallPrimary", "wallSecondary", "fascia"];
+                  if (target !== "none" && structuralTargets.includes(target as string)) {
+                    // Find and clear this material from other structural target assignments
+                    for (const [matName, assignment] of Object.entries(overrides)) {
+                      if (matName !== selectedMaterial && assignment !== "none" && structuralTargets.includes(assignment)) {
+                        // Check if this material should be reassigned (if it's the same as selectedMaterial through auto-assignment)
+                        if (autoAssignments[matName] === autoAssignments[selectedMaterial] && matName !== selectedMaterial) {
+                          setOverride(planFile.name, matName, "none");
+                        }
+                      }
+                    }
+                  }
+                  setOverride(planFile.name, selectedMaterial, target);
                   setSelectedMaterial(null);
                 }}
                 onClose={() => setSelectedMaterial(null)}
